@@ -1,20 +1,8 @@
-const { v4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const moment = require("moment");
 
 const HttpError = require("../models/http-error");
 const Memory = require("../models/memory");
-const { findByIdAndDelete } = require("../models/memory");
-
-let DUMMY_MEMORIES = [
-   {
-      id: "m1",
-      title: "My dog",
-      description: "Bla bla bla",
-      createdOn: moment("1999-02-15 09:00:00"),
-      creator: "u1",
-   },
-];
 
 const getMemoryById = async (req, res, next) => {
    const memoryId = req.params.mid;
