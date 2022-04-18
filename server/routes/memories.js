@@ -6,8 +6,12 @@ const router = express.Router();
 
 router.get("/:mid", memoriesControllers.getMemoryById);
 
-router.get("/user/:uid", memoriesControllers.getMemoryByUserId);
+router.get("/user/:uid", memoriesControllers.getMemoriesByUserId);
 
 router.post("/", memoriesControllers.createMemory);
+
+router.patch("/:mid", memoriesControllers.updateMemory);
+
+router.delete("/:mid", memoriesControllers.deleteMemory);
 
 module.exports = router;

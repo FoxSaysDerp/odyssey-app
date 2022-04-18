@@ -2,7 +2,7 @@ const { uuid } = require("uuidv4");
 
 const HttpError = require("../models/http-error");
 
-const DUMMY_MEMORIES = [
+let DUMMY_MEMORIES = [
    {
       id: "m1",
       title: "My dog",
@@ -23,7 +23,7 @@ const getMemoryById = (req, res, next) => {
 
    if (!memory) {
       throw (error = new HttpError(
-         "Could not find Memory for provided id",
+         `Could not find Memory for provided id: ${memoryId}`,
          404
       ));
    }
@@ -31,15 +31,18 @@ const getMemoryById = (req, res, next) => {
    res.json({ memory });
 };
 
-const getMemoryByUserId = (req, res, next) => {
+const getMemoriesByUserId = (req, res, next) => {
    const userId = req.params.uid;
-   const memory = DUMMY_MEMORIES.find((m) => {
+   const memories = DUMMY_MEMORIES.filter((m) => {
       return m.creator === userId;
    });
 
-   if (!memory) {
+   if (!memories || memories.length === 0) {
       return next(
-         new HttpError("Could not find Memory for provided user id", 404)
+         new HttpError(
+            `Could not find Memories for provided user id: ${userId}.`,
+            404
+         )
       );
    }
 
@@ -61,6 +64,30 @@ const createMemory = (req, res, next) => {
    res.status(201).json({ memory: createdMemory });
 };
 
+const updateMemory = (req, res, next) => {
+   const { title, description } = req.body;
+   const memoryId = req.params.mid;
+
+   const updatedMemory = { ...DUMMY_MEMORIES.find((m) => (m.id = memoryId)) };
+   const memoryIndex = DUMMY_MEMORIES.findIndex((m) => m.id === memoryId);
+
+   updatedMemory.title = title;
+   updatedMemory.description = description;
+
+   DUMMY_MEMORIES[memoryIndex] = updatedMemory;
+
+   res.status(200).json({ memory: updatedMemory });
+};
+
+const deleteMemory = (req, res, next) => {
+   const memoryId = req.params.mid;
+   DUMMY_MEMORIES = DUMMY_MEMORIES.filter((m) => m.id !== memoryId);
+
+   res.status(200).json({ message: `Deleted Memory with id: ${memoryId}` });
+};
+
 exports.getMemoryById = getMemoryById;
-exports.getMemoryByUserId = getMemoryByUserId;
+exports.getMemoriesByUserId = getMemoriesByUserId;
 exports.createMemory = createMemory;
+exports.updateMemory = updateMemory;
+exports.deleteMemory = deleteMemory;
