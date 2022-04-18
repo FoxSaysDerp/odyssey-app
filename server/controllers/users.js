@@ -1,4 +1,5 @@
 const { v4 } = require("uuid");
+const moment = require("moment");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
@@ -10,6 +11,7 @@ let DUMMY_USERS = [
       memories: "353",
       email: "test@test.com",
       password: "test",
+      createdOn: moment("1999-02-15 09:00:00"),
    },
 ];
 
@@ -42,6 +44,7 @@ const createUser = (req, res, next) => {
       memories: 0,
       email,
       password,
+      createdOn: moment(),
    };
 
    if (DUMMY_USERS.find((u) => u.email === createUser.email)) {

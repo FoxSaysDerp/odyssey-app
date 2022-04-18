@@ -1,5 +1,6 @@
 const { v4 } = require("uuid");
 const { validationResult } = require("express-validator");
+const moment = require("moment");
 
 const HttpError = require("../models/http-error");
 
@@ -8,11 +9,7 @@ let DUMMY_MEMORIES = [
       id: "m1",
       title: "My dog",
       description: "Bla bla bla",
-      address: "Test street 213B",
-      location: {
-         lat: 40.7484474,
-         lng: -73.9871516,
-      },
+      createdOn: moment("1999-02-15 09:00:00"),
       creator: "u1",
    },
 ];
@@ -61,14 +58,13 @@ const createMemory = (req, res, next) => {
       );
    }
 
-   const { title, description, address, coordinates, creator } = req.body;
+   const { title, description, creator } = req.body;
    const createdMemory = {
       id: v4(),
       title,
       description,
-      address,
-      location: coordinates,
       creator,
+      createdOn: moment(),
    };
 
    DUMMY_MEMORIES.push(createdMemory);
