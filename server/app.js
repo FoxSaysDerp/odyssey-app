@@ -8,6 +8,8 @@ const memoriesRoutes = require("./routes/memories");
 const usersRoutes = require("./routes/users");
 
 const HttpError = require("./models/http-error");
+const loading = require("./misc/loading");
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -29,16 +31,23 @@ app.use((error, req, res, next) => {
    });
 });
 
+let connection = false;
+
+!connection ? loading : null;
+
 mongoose
    .connect(
       `mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@odysseyapp.hhpok.mongodb.net/odysseyAppDB?retryWrites=true&w=majority`
    )
    .then(() => {
+      connection = true;
+      clearInterval(loading);
       app.listen(process.env.PORT || 5000);
+      console.clear();
       console.log(
-         `Server listening at port ${
+         `\x1b[32m[nodemon] \x1b[0mServer listening at port \x1b[31m${
             process.env.PORT ? process.env.PORT : 5000
-         }`
+         }\x1b[0m.`
       );
    })
    .catch((err) => {
