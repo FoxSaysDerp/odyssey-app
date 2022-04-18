@@ -1,4 +1,5 @@
-const { uuid } = require("uuidv4");
+const { v4 } = require("uuid");
+const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
 
@@ -7,6 +8,7 @@ let DUMMY_MEMORIES = [
       id: "m1",
       title: "My dog",
       description: "Bla bla bla",
+      address: "Test street 213B",
       location: {
          lat: 40.7484474,
          lng: -73.9871516,
@@ -50,11 +52,21 @@ const getMemoriesByUserId = (req, res, next) => {
 };
 
 const createMemory = (req, res, next) => {
-   const { title, description, coordinates, creator } = req.body;
+   const errors = validationResult(req);
+
+   if (!errors.isEmpty()) {
+      throw new HttpError(
+         "Invalid inputs passed, please check your data.",
+         422
+      );
+   }
+
+   const { title, description, address, coordinates, creator } = req.body;
    const createdMemory = {
-      id: uuid(),
+      id: v4(),
       title,
       description,
+      address,
       location: coordinates,
       creator,
    };
@@ -65,6 +77,15 @@ const createMemory = (req, res, next) => {
 };
 
 const updateMemory = (req, res, next) => {
+   const errors = validationResult(req);
+
+   if (!errors.isEmpty()) {
+      throw new HttpError(
+         "Invalid inputs passed, please check your data.",
+         422
+      );
+   }
+
    const { title, description } = req.body;
    const memoryId = req.params.mid;
 
@@ -81,6 +102,13 @@ const updateMemory = (req, res, next) => {
 
 const deleteMemory = (req, res, next) => {
    const memoryId = req.params.mid;
+   if (!DUMMY_MEMORIES.find((m) => m.id === memoryId)) {
+      throw new HttpError(
+         `Could not find a Memory with that ID: ${memoryId}`,
+         404
+      );
+   }
+
    DUMMY_MEMORIES = DUMMY_MEMORIES.filter((m) => m.id !== memoryId);
 
    res.status(200).json({ message: `Deleted Memory with id: ${memoryId}` });

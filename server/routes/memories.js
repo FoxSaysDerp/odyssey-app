@@ -1,4 +1,5 @@
 const express = require("express");
+const { check } = require("express-validator");
 
 const memoriesControllers = require("../controllers/memories");
 
@@ -8,9 +9,21 @@ router.get("/:mid", memoriesControllers.getMemoryById);
 
 router.get("/user/:uid", memoriesControllers.getMemoriesByUserId);
 
-router.post("/", memoriesControllers.createMemory);
+router.post(
+   "/",
+   [
+      check("title").not().isEmpty(),
+      check("description").isLength({ min: 5 }),
+      check("address").not().isEmpty(),
+   ],
+   memoriesControllers.createMemory
+);
 
-router.patch("/:mid", memoriesControllers.updateMemory);
+router.patch(
+   "/:mid",
+   [check("title").not().isEmpty(), check("description").isLength({ min: 5 })],
+   memoriesControllers.updateMemory
+);
 
 router.delete("/:mid", memoriesControllers.deleteMemory);
 
