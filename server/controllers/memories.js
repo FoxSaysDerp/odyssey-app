@@ -1,3 +1,5 @@
+const { uuid } = require("uuidv4");
+
 const HttpError = require("../models/http-error");
 
 const DUMMY_MEMORIES = [
@@ -44,7 +46,20 @@ const getMemoryByUserId = (req, res, next) => {
    res.json({ memory });
 };
 
-const createMemory = (req, res, next) => {};
+const createMemory = (req, res, next) => {
+   const { title, description, coordinates, creator } = req.body;
+   const createdMemory = {
+      id: uuid(),
+      title,
+      description,
+      location: coordinates,
+      creator,
+   };
+
+   DUMMY_MEMORIES.push(createdMemory);
+
+   res.status(201).json({ memory: createdMemory });
+};
 
 exports.getMemoryById = getMemoryById;
 exports.getMemoryByUserId = getMemoryByUserId;
