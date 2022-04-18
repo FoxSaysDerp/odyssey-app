@@ -1,5 +1,8 @@
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const memoriesRoutes = require("./routes/memories");
 const usersRoutes = require("./routes/users");
@@ -26,4 +29,18 @@ app.use((error, req, res, next) => {
    });
 });
 
-app.listen(5000);
+mongoose
+   .connect(
+      `mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@odysseyapp.hhpok.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+   )
+   .then(() => {
+      app.listen(process.env.PORT || 5000);
+      console.log(
+         `Server listening at port ${
+            process.env.PORT ? process.env.PORT : 5000
+         }`
+      );
+   })
+   .catch((err) => {
+      console.error(err);
+   });
