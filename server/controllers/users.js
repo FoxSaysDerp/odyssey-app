@@ -60,7 +60,7 @@ const createUser = async (req, res, next) => {
       email,
       image: "https://solisradius.pl/wp-content/uploads/2021/04/person-icon.png",
       password,
-      memories: 0,
+      memories: [],
       createdOn: moment(),
    });
 

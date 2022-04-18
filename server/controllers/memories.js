@@ -1,8 +1,10 @@
 const { validationResult } = require("express-validator");
 const moment = require("moment");
+const mongoose = require("mongoose");
 
 const HttpError = require("../models/http-error");
 const Memory = require("../models/memory");
+const User = require("../models/user");
 
 const getMemoryById = async (req, res, next) => {
    const memoryId = req.params.mid;
@@ -74,11 +76,29 @@ const createMemory = async (req, res, next) => {
       creator,
    });
 
+   let user;
    try {
-      await createdMemory.save();
+      user = await User.findById(creator);
+   } catch (err) {
+      return next(
+         new HttpError("Creating a Memory has failed, please try again", 500)
+      );
+   }
+
+   if (!user) {
+      return next(new HttpError("Could not find user for provided id", 404));
+   }
+
+   try {
+      const sess = await mongoose.startSession();
+      sess.startTransaction();
+      await createdMemory.save({ session: sess });
+      user.memories.push(createdMemory);
+      await user.save({ session: sess });
+      await sess.commitTransaction();
    } catch (err) {
       const error = new HttpError(
-         "Creating a Memory has failed, please try again.",
+         "Creating a Memory has failed, please try again .",
          500
       );
       return next(error);
@@ -133,14 +153,27 @@ const deleteMemory = async (req, res, next) => {
 
    let memory;
    try {
-      memory = await Memory.findById(memoryId);
-      await Memory.findByIdAndDelete(memoryId);
+      memory = await Memory.findById(memoryId).populate("creator");
    } catch (err) {
       const error = new HttpError(
-         "Something went wrong, count not find a memory",
+         "Something went wrong, could not find a memory",
          500
       );
       return next(error);
+   }
+
+   try {
+      const sess = await mongoose.startSession();
+      sess.startTransaction();
+      await memory.remove({ session: sess });
+      memory.creator.memories.pull(memory);
+      await memory.creator.save({ session: sess });
+      await sess.commitTransaction();
+   } catch (err) {
+      console.log(err);
+      return next(
+         new HttpError("Somethign went wrong, could not delete a memory", 500)
+      );
    }
 
    if (!memory) {
