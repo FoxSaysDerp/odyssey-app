@@ -3,6 +3,8 @@ const { validationResult } = require("express-validator");
 const moment = require("moment");
 
 const HttpError = require("../models/http-error");
+const Memory = require("../models/memory");
+const { findByIdAndDelete } = require("../models/memory");
 
 let DUMMY_MEMORIES = [
    {
@@ -14,27 +16,44 @@ let DUMMY_MEMORIES = [
    },
 ];
 
-const getMemoryById = (req, res, next) => {
+const getMemoryById = async (req, res, next) => {
    const memoryId = req.params.mid;
-   const memory = DUMMY_MEMORIES.find((m) => {
-      return m.id === memoryId;
-   });
 
-   if (!memory) {
-      throw (error = new HttpError(
-         `Could not find Memory for provided id: ${memoryId}`,
-         404
-      ));
+   let memory;
+   try {
+      memory = await Memory.findById(memoryId);
+   } catch (err) {
+      const error = new HttpError(
+         "Something went wrong, count not find a memory",
+         500
+      );
+      return next(error);
    }
 
-   res.json({ memory });
+   if (!memory) {
+      const error = new HttpError(
+         `Could not find Memory for provided id: ${memoryId}`,
+         404
+      );
+      return next(error);
+   }
+
+   res.json({ memory: memory.toObject({ getters: true }) });
 };
 
-const getMemoriesByUserId = (req, res, next) => {
+const getMemoriesByUserId = async (req, res, next) => {
    const userId = req.params.uid;
-   const memories = DUMMY_MEMORIES.filter((m) => {
-      return m.creator === userId;
-   });
+
+   let memories;
+   try {
+      memories = await Memory.find({ creator: userId });
+   } catch (err) {
+      const error = new HttpError(
+         "Something went wrong, count not find a memory",
+         500
+      );
+      return next(error);
+   }
 
    if (!memories || memories.length === 0) {
       return next(
@@ -48,7 +67,7 @@ const getMemoriesByUserId = (req, res, next) => {
    res.json({ memory });
 };
 
-const createMemory = (req, res, next) => {
+const createMemory = async (req, res, next) => {
    const errors = validationResult(req);
 
    if (!errors.isEmpty()) {
@@ -59,20 +78,28 @@ const createMemory = (req, res, next) => {
    }
 
    const { title, description, creator } = req.body;
-   const createdMemory = {
-      id: v4(),
+   const createdMemory = new Memory({
       title,
       description,
-      creator,
+      image: "https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec",
       createdOn: moment(),
-   };
+      creator,
+   });
 
-   DUMMY_MEMORIES.push(createdMemory);
+   try {
+      await createdMemory.save();
+   } catch (err) {
+      const error = new HttpError(
+         "Creating a Memory has failed, please try again.",
+         500
+      );
+      return next(error);
+   }
 
    res.status(201).json({ memory: createdMemory });
 };
 
-const updateMemory = (req, res, next) => {
+const updateMemory = async (req, res, next) => {
    const errors = validationResult(req);
 
    if (!errors.isEmpty()) {
@@ -85,27 +112,56 @@ const updateMemory = (req, res, next) => {
    const { title, description } = req.body;
    const memoryId = req.params.mid;
 
-   const updatedMemory = { ...DUMMY_MEMORIES.find((m) => (m.id = memoryId)) };
-   const memoryIndex = DUMMY_MEMORIES.findIndex((m) => m.id === memoryId);
+   let memory;
 
-   updatedMemory.title = title;
-   updatedMemory.description = description;
-
-   DUMMY_MEMORIES[memoryIndex] = updatedMemory;
-
-   res.status(200).json({ memory: updatedMemory });
-};
-
-const deleteMemory = (req, res, next) => {
-   const memoryId = req.params.mid;
-   if (!DUMMY_MEMORIES.find((m) => m.id === memoryId)) {
-      throw new HttpError(
-         `Could not find a Memory with that ID: ${memoryId}`,
-         404
+   try {
+      memory = await Memory.findById(memoryId);
+   } catch (err) {
+      const error = new HttpError(
+         "Creating a Memory has failed, please try again.",
+         500
       );
+      return next(error);
    }
 
-   DUMMY_MEMORIES = DUMMY_MEMORIES.filter((m) => m.id !== memoryId);
+   memory.title = title;
+   memory.description = description;
+
+   try {
+      await memory.save();
+   } catch (err) {
+      const error = new HttpError(
+         "Creating a Memory has failed, please try again.",
+         500
+      );
+      return next(error);
+   }
+
+   res.status(200).json({ memory: memory.toObject({ getters: true }) });
+};
+
+const deleteMemory = async (req, res, next) => {
+   const memoryId = req.params.mid;
+
+   let memory;
+   try {
+      memory = await Memory.findById(memoryId);
+      await Memory.findByIdAndDelete(memoryId);
+   } catch (err) {
+      const error = new HttpError(
+         "Something went wrong, count not find a memory",
+         500
+      );
+      return next(error);
+   }
+
+   if (!memory) {
+      const error = new HttpError(
+         `Could not find Memory for provided id: ${memoryId}`,
+         404
+      );
+      return next(error);
+   }
 
    res.status(200).json({ message: `Deleted Memory with id: ${memoryId}` });
 };

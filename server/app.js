@@ -31,7 +31,7 @@ app.use((error, req, res, next) => {
 
 mongoose
    .connect(
-      `mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@odysseyapp.hhpok.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+      `mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@odysseyapp.hhpok.mongodb.net/odysseyAppDB?retryWrites=true&w=majority`
    )
    .then(() => {
       app.listen(process.env.PORT || 5000);
