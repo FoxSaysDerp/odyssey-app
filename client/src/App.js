@@ -1,11 +1,18 @@
-const App = () => {
-	return (
-		<div>
-			<header>
-        Odyssey App
-			</header>
-		</div>
-	)
-}
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 
-export default App
+import Users from "./user/pages/Users";
+import NewMemory from "./memories/pages/NewMemory";
+
+const App = () => {
+   return (
+      <BrowserRouter>
+         <Switch>
+            <Route path="/users" component={Users} exact />
+            <Route path="/memories/new" component={NewMemory} exact />
+            <Redirect to="/" />
+         </Switch>
+      </BrowserRouter>
+   );
+};
+
+export default App;
