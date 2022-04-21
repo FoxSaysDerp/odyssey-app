@@ -82,11 +82,12 @@ const Input = ({
    validators,
    onInput,
    hidden,
-   value,
+   initialValue,
+   initialIsValid,
 }) => {
    const [inputState, dispatch] = useReducer(inputReducer, {
-      value: value || "",
-      isValid: false,
+      value: initialValue || "",
+      isValid: initialIsValid || false,
       isTouched: false,
    });
 

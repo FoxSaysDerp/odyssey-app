@@ -1,9 +1,11 @@
 import { useCallback, useReducer } from "react";
 import styled from "styled-components";
 
+import { useForm } from "../../common/hooks/useForm";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../util/validators";
+
 import Input from "../../common/components/Input";
-import { ButtonGradient } from "../../styles/Main";
+import { button, buttonGradient } from "../../common/components/Button";
 
 export const MemoryFormWrapper = styled.form`
    display: flex;
@@ -14,37 +16,14 @@ export const MemoryFormWrapper = styled.form`
    row-gap: 30px;
 `;
 
-const formReducer = (state, action) => {
-   switch (action.type) {
-      case "INPUT_CHANGE": {
-         let formIsValid = true;
-         for (let inputId in state.inputs) {
-            if (inputId === action.inputId) {
-               formIsValid = formIsValid && action.isValid;
-            } else {
-               formIsValid = formIsValid && state.inputs[inputId].isValid;
-            }
-         }
-         return {
-            ...state,
-            inputs: {
-               ...state.inputs,
-               [action.inputId]: {
-                  value: action.value,
-                  isValid: action.isValid,
-               },
-            },
-            isValid: formIsValid,
-         };
-      }
-      default:
-         return state;
-   }
-};
+const SubmitMemoryButton = styled.button`
+   ${button}
+   ${buttonGradient}
+`;
 
 const NewMemory = () => {
-   const [formState, dispatch] = useReducer(formReducer, {
-      inputs: {
+   const { formState, inputHandler } = useForm(
+      {
          title: {
             value: "",
             isValid: false,
@@ -54,18 +33,8 @@ const NewMemory = () => {
             isValid: false,
          },
       },
-      isValid: false,
-   });
-
-   const inputHandler = useCallback((id, value, isValid) => {
-      dispatch({
-         type: "INPUT_CHANGE",
-         value: value,
-         isValid: isValid,
-         inputId: id,
-      });
-      console.log(formState);
-   }, []);
+      false
+   );
 
    const memorySubmitHandler = (e) => {
       e.preventDefault();
@@ -90,9 +59,9 @@ const NewMemory = () => {
             errorText="Please enter a valid description (at least 5 character)."
             onInput={inputHandler}
          />
-         <ButtonGradient type="submit" disabled={!formState.isValid}>
+         <SubmitMemoryButton type="submit" disabled={!formState.isValid}>
             Add Memory
-         </ButtonGradient>
+         </SubmitMemoryButton>
       </MemoryFormWrapper>
    );
 };

@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Button } from "../../styles/Main";
+import { Link } from "react-router-dom";
+import { button } from "../../common/components/Button";
 import { HiPencilAlt } from "react-icons/hi";
 import { MdDelete } from "react-icons/md";
 
@@ -35,11 +36,13 @@ const MemoryDate = styled.div`
    color: #fff;
 `;
 
-const EditButton = styled(Button)`
+const EditButton = styled(Link)`
+   ${button}
    font-size: 1rem;
 `;
 
-const DeleteButton = styled(Button)`
+const DeleteButton = styled(Link)`
+   ${button}
    font-size: 1rem;
 `;
 const ButtonContainer = styled.div`
@@ -50,7 +53,14 @@ const ButtonContainer = styled.div`
    column-gap: 15px;
 `;
 
-const MemoryItem = ({ imageUrl, title, description, creatorId, createdOn }) => {
+const MemoryItem = ({
+   id,
+   imageUrl,
+   title,
+   description,
+   creatorId,
+   createdOn,
+}) => {
    return (
       <MemoryItemWrapper>
          <MemoryImage src={imageUrl} alt={title} />
@@ -63,7 +73,7 @@ const MemoryItem = ({ imageUrl, title, description, creatorId, createdOn }) => {
             <DeleteButton>
                <MdDelete className="react-icon" /> <span>Delete</span>
             </DeleteButton>
-            <EditButton>
+            <EditButton to={`/memories/${id}`}>
                <HiPencilAlt className="react-icon" /> <span>Edit</span>
             </EditButton>
          </ButtonContainer>
