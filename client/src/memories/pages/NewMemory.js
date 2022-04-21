@@ -5,7 +5,7 @@ import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../util/validators";
 import Input from "../../common/components/Input";
 import { ButtonGradient } from "../../styles/Main";
 
-const MemoryFormWrapper = styled.form`
+export const MemoryFormWrapper = styled.form`
    display: flex;
    height: 100vh;
    justify-content: center;

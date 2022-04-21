@@ -82,9 +82,10 @@ const Input = ({
    validators,
    onInput,
    hidden,
+   value,
 }) => {
    const [inputState, dispatch] = useReducer(inputReducer, {
-      value: "",
+      value: value || "",
       isValid: false,
       isTouched: false,
    });
@@ -97,11 +98,9 @@ const Input = ({
       dispatch({ type: "TOUCH" });
    };
 
-   const { value, isValid } = inputState;
-
    useEffect(() => {
-      onInput(id, value, isValid);
-   }, [id, value, isValid, onInput]);
+      onInput(id, inputState.value, inputState.isValid);
+   }, [id, inputState.value, inputState.isValid, onInput]);
 
    return (
       <InputWrapper hidden={hidden}>

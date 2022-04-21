@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ButtonGradient } from "../../styles/Main";
 import { BsFillPlusCircleFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 const AddMemoryButtonWrapper = styled(ButtonGradient)`
    .react-icon {
@@ -13,10 +14,12 @@ const AddMemoryButtonWrapper = styled(ButtonGradient)`
 
 const AddMemoryButton = () => {
    return (
-      <AddMemoryButtonWrapper>
-         <BsFillPlusCircleFill className="react-icon" />
-         <span>Add a Memory</span>
-      </AddMemoryButtonWrapper>
+      <Link to="/memories/new">
+         <AddMemoryButtonWrapper type="button">
+            <BsFillPlusCircleFill className="react-icon" />
+            <span>Add a Memory</span>
+         </AddMemoryButtonWrapper>
+      </Link>
    );
 };
 
