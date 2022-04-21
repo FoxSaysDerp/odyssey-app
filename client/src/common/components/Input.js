@@ -1,10 +1,15 @@
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import { validate } from "../../util/validators";
 import styled from "styled-components";
 
 const InputWrapper = styled.div`
    display: block;
    position: relative;
+   ${({ hidden }) =>
+      hidden &&
+      `
+      display: none;
+   `}
 `;
 const InputLabel = styled.label`
    display: block;
@@ -75,6 +80,8 @@ const Input = ({
    rows,
    errorText,
    validators,
+   onInput,
+   hidden,
 }) => {
    const [inputState, dispatch] = useReducer(inputReducer, {
       value: "",
@@ -90,8 +97,14 @@ const Input = ({
       dispatch({ type: "TOUCH" });
    };
 
+   const { value, isValid } = inputState;
+
+   useEffect(() => {
+      onInput(id, value, isValid);
+   }, [id, value, isValid, onInput]);
+
    return (
-      <InputWrapper>
+      <InputWrapper hidden={hidden}>
          {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
          {element === "textarea" ? (
             <InputTextArea

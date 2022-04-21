@@ -50,6 +50,11 @@ export const Button = styled.button`
       margin-right: 8px;
       transition: all 0.3s ease-in-out;
    }
+   &[disabled] {
+      filter: saturate(0.3);
+      opacity: 0.5;
+      cursor: not-allowed;
+   }
    &:hover,
    &:focus {
       background-color: ${theme.color.mainColorHalf};
