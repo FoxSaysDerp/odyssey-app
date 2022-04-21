@@ -33,9 +33,34 @@ export const Button = styled.button`
    margin: 0;
    outline: 0;
    border: 0;
-   padding: 5px 10px;
-   background: ${theme.gradient.main};
-   font-weight: 700;
+   padding: 6px 10px;
+   background-color: ${theme.color.mainColor};
+   font-size: 1rem;
    color: #fff;
    font-size: 1.5rem;
+   border-radius: 8px;
+   border: 1px solid transparent;
+   transition: all 0.3s ease-in-out;
+   .react-icon {
+      height: 1rem;
+      width: 1rem;
+      color: #fff;
+      margin-right: 8px;
+      transition: all 0.3s ease-in-out;
+   }
+   &:hover,
+   &:focus {
+      background-color: ${theme.color.mainColorHalf};
+      box-shadow: 0 8px 32px 0 ${theme.color.mainColorHalf};
+      backdrop-filter: blur(4px);
+      border: 1px solid ${theme.color.mainColorHalf};
+      .react-icon {
+         color: ${theme.color.mainColor};
+      }
+   }
+`;
+
+export const ButtonGradient = styled(Button)`
+   background: ${theme.gradient.main};
+   font-weight: 700;
 `;

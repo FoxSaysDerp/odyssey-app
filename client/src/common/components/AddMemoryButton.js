@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { Button } from "../../styles/Main";
+import { ButtonGradient } from "../../styles/Main";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 
-const AddMemoryButtonWrapper = styled(Button)`
+const AddMemoryButtonWrapper = styled(ButtonGradient)`
    .react-icon {
       color: #fff;
       height: 1.5rem;

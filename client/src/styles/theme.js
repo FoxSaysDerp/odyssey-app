@@ -9,6 +9,8 @@ const theme = {
       mobster: "#79717a",
       dustyGray: "#a68f97",
       mainColor: "#e1326a",
+      mainColorHalf: "#e1326a50",
+      mainColorQuater: "#e1326a25",
    },
    gradient: {
       main: "linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); ",
