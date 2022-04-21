@@ -28,3 +28,14 @@ export const Container = styled.div`
       padding: 0 15px;
    }
 `;
+
+export const Button = styled.button`
+   margin: 0;
+   outline: 0;
+   border: 0;
+   padding: 5px 10px;
+   background: ${theme.gradient.main};
+   font-weight: 700;
+   color: #fff;
+   font-size: 1.5rem;
+`;

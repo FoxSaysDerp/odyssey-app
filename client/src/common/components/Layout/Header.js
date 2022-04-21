@@ -10,6 +10,23 @@ import { Container } from "../../../styles/Main";
 
 import nav from "../../../constant/nav";
 
+const fadeIn = keyframes`
+   0% {
+      opacity: 0;
+      position: absolute;
+      margin-left: calc(2.5rem + 20px);
+   }
+   
+   50% {
+      opacity: 0;
+      position: relative;
+      margin-left: 0
+   }
+   100% {
+      opacity: 1;
+   }
+`;
+
 const HeaderWrapper = styled.header`
    position: fixed;
    top: 0;
@@ -53,16 +70,24 @@ const HeaderContainer = styled(Container)`
    display: flex;
    flex-direction: column;
    justify-content: center;
-   align-items: center;
+   align-items: flex-start;
    height: 100%;
+   position: relative;
+   padding: 0 30px;
+
+   &.closed {
+      align-items: center;
+   }
 `;
 
 const Logo = styled.h1`
-   font-size: 3.25rem;
+   font-size: 2.75rem;
    line-height: 1;
    font-weight: 700;
    font-family: ${theme.fonts.dancingScript};
    text-align: center;
+   transition: all 0.3s ease-in-out;
+   animation: ${fadeIn} 1s forwards;
    &.closed {
       display: none;
    }
@@ -70,21 +95,27 @@ const Logo = styled.h1`
 
 const LogoIcon = styled(FaCameraRetro)`
    display: inline-block;
-   height: 3rem;
-   width: 3rem;
-   &.closed {
-      margin-bottom: 30px;
-   }
+   height: 2.5rem;
+   width: 2.5rem;
+   transition: all 0.3s ease-in-out;
 `;
 
 const HeaderLink = styled(Link)`
    color: black;
+   position: absolute;
+   top: 15px;
+   left: 30px;
    text-decoration: none;
    display: flex;
    align-items: center;
    justify-content: center;
-   column-gap: 15px;
+   column-gap: 20px;
    margin-bottom: 15px;
+   transition: all 0.3s ease-in-out;
+   &.closed {
+      left: 50%;
+      transform: translateX(-50%);
+   }
 `;
 
 const Navigation = styled.nav`
@@ -98,22 +129,12 @@ const Navigation = styled.nav`
    }
 `;
 
-const fadeIn = keyframes`
-   from {
-      opacity: 0;
-      position: absolute;
-   }
-   to {
-      opacity: 1;
-      position: relative;
-   }
-`;
-
 const NavigationLink = styled(NavLink)`
    color: #000;
    text-decoration: none;
    font-size: 1.5rem;
    transition: all 0.3s ease-in-out;
+   display: inline-block;
    .react-icon {
       height: 2rem;
       width: 2rem;
@@ -126,7 +147,7 @@ const NavigationLink = styled(NavLink)`
       white-space: nowrap;
    }
    &.active {
-      color: ${theme.color.dustyGray};
+      color: ${theme.color.mainColor};
    }
    &.closed {
       > span {
@@ -159,8 +180,8 @@ const Header = () => {
    const [isClosed, setIsClosed] = useState(true);
    return (
       <HeaderWrapper className={classnames({ closed: isClosed })}>
-         <HeaderContainer>
-            <HeaderLink to="/">
+         <HeaderContainer className={classnames({ closed: isClosed })}>
+            <HeaderLink className={classnames({ closed: isClosed })} to="/">
                <LogoIcon className={classnames({ closed: isClosed })} />
                <Logo className={classnames({ closed: isClosed })}>Odyssey</Logo>
             </HeaderLink>

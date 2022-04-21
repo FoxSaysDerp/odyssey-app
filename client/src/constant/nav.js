@@ -29,7 +29,12 @@ const nav = [
       loggedIn: true,
    },
    {
-      icon: <BiLogIn className="react-icon" style={{ marginLeft: "-6px" }} />,
+      icon: (
+         <BiLogIn
+            className="react-icon"
+            style={{ transform: "translate(-5px, 7px)" }}
+         />
+      ),
       label: "Login",
       link: "/auth",
       loggedIn: false,

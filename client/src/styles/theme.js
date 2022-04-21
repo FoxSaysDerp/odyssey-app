@@ -8,9 +8,10 @@ const theme = {
       scarpaFlow: "#4b4952",
       mobster: "#79717a",
       dustyGray: "#a68f97",
+      mainColor: "#e1326a",
    },
    gradient: {
-      main: "linear-gradient(45deg, rgba(0,79,77,1) 0%, rgba(31,32,36,1) 25%, rgba(75,73,82,1) 50%, rgba(121,113,122,1) 75%, rgba(166,143,151,1) 100%);",
+      main: "linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); ",
    },
    shadow: {
       normal: "8px 8px 12px -12px rgba(97, 97, 97, 0.5)",
