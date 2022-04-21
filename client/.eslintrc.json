@@ -22,7 +22,8 @@
      "react/react-in-jsx-scope": "off",
      "react/prop-types": 0,
      "indent": [
-        "warn", 3
+        "warn", 3,
+        { "SwitchCase": 1 }
      ],
      "quotes": [
        "warn",
