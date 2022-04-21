@@ -1,4 +1,6 @@
 import MemoryList from "../components/MemoryList";
+import { useParams } from "react-router-dom";
+
 import moment from "moment";
 
 const DUMMY_MEMORIES = [
@@ -25,7 +27,11 @@ const DUMMY_MEMORIES = [
 ];
 
 const UserMemories = () => {
-   return <MemoryList items={DUMMY_MEMORIES} />;
+   const userId = useParams().userId;
+   const loadedMemories = DUMMY_MEMORIES.filter(
+      (memory) => memory.creatorId === userId
+   );
+   return <MemoryList items={loadedMemories} />;
 };
 
 export default UserMemories;

@@ -33,17 +33,19 @@ export const Button = styled.button`
    margin: 0;
    outline: 0;
    border: 0;
-   padding: 6px 10px;
+   padding: 12px 15px;
    background-color: ${theme.color.mainColor};
-   font-size: 1rem;
+   font-size: 1.2rem;
    color: #fff;
-   font-size: 1.5rem;
    border-radius: 8px;
    border: 1px solid transparent;
    transition: all 0.3s ease-in-out;
+   display: flex;
+   justify-content: center;
+   align-items: center;
    .react-icon {
-      height: 1rem;
-      width: 1rem;
+      height: 0.75rem;
+      width: 0.75rem;
       color: #fff;
       margin-right: 8px;
       transition: all 0.3s ease-in-out;
@@ -58,9 +60,20 @@ export const Button = styled.button`
          color: ${theme.color.mainColor};
       }
    }
+   &:active {
+      opacity: 0.8;
+   }
 `;
 
 export const ButtonGradient = styled(Button)`
    background: ${theme.gradient.main};
-   font-weight: 700;
+   font-weight: 500;
+   border: none;
+   &:hover,
+   &:focus {
+      border: 1px;
+      .react-icon {
+         color: #fff;
+      }
+   }
 `;
