@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
@@ -23,9 +23,9 @@ const DUMMY_MEMORIES = [
    },
    {
       id: "m2",
-      title: "Test title",
+      title: "Test title 2 Electric Boogaloo",
       description:
-         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+         "Filler text kekw Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       imageUrl:
          "https://images.unsplash.com/photo-1650464232600-68f45ea392ad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
       creatorId: "hugephotographer2022",
@@ -51,23 +51,43 @@ const SubmitMemoryButton = styled.button`
 `;
 
 const UpdateMemory = () => {
+   const [isLoading, setIsLoading] = useState(true);
    const memoryId = useParams().memoryId;
 
    const identifiedMemory = DUMMY_MEMORIES.find((m) => m.id === memoryId);
 
-   const { formState, inputHandler } = useForm(
+   const { formState, inputHandler, setFormData } = useForm(
       {
          title: {
-            value: identifiedMemory.title,
-            isValid: true,
+            value: "",
+            isValid: false,
          },
          description: {
-            value: identifiedMemory.title,
-            isValid: true,
+            value: "",
+            isValid: false,
          },
       },
-      true
+      false
    );
+
+   useEffect(() => {
+      if (identifiedMemory) {
+         setFormData(
+            {
+               title: {
+                  value: identifiedMemory.title,
+                  isValid: true,
+               },
+               description: {
+                  value: identifiedMemory.description,
+                  isValid: true,
+               },
+            },
+            true
+         );
+      }
+      setIsLoading(false);
+   }, [setFormData, identifiedMemory]);
 
    if (!identifiedMemory) {
       return (
@@ -76,6 +96,11 @@ const UpdateMemory = () => {
          </MemoryNotFound>
       );
    }
+
+   if (isLoading) {
+      return <div>Loading...</div>;
+   }
+
    return (
       <MemoryFormWrapper>
          <Input
