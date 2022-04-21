@@ -1,10 +1,16 @@
 import styled from "styled-components";
 import theme from "./theme";
 
+export const Main = styled.main`
+   width: calc(66%-30px);
+   padding-left: min(33% + 30px, 350px);
+`;
+
 export const Container = styled.div`
    display: block;
    margin: 0 auto;
    max-width: 1320px;
+   padding: 0 15px;
    ${theme.mixins.xl} {
       max-width: 1140px;
    }

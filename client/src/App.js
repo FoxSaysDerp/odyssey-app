@@ -1,4 +1,8 @@
+import "./styles/app.scss";
+
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
+
+import { Main } from "./styles/Main";
 
 import Header from "./common/components/Layout/Header";
 import Users from "./user/pages/Users";
@@ -8,11 +12,13 @@ const App = () => {
    return (
       <BrowserRouter>
          <Header />
-         <Switch>
-            <Route path="/users" component={Users} exact />
-            <Route path="/memories/new" component={NewMemory} exact />
-            <Redirect to="/" />
-         </Switch>
+         <Main>
+            <Switch>
+               <Route path="/users" component={Users} exact />
+               <Route path="/memories/new" component={NewMemory} exact />
+               <Redirect to="/" />
+            </Switch>
+         </Main>
       </BrowserRouter>
    );
 };
