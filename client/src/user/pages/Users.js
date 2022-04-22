@@ -4,8 +4,7 @@ import { useHttpClient } from "../../common/hooks/useHttpClient";
 import UserList from "../components/UserList";
 import Spinner from "../../common/components/Spinner";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const Users = () => {
    const { isLoading, error, sendRequest } = useHttpClient();
@@ -23,7 +22,7 @@ const Users = () => {
             toast.error(
                `${error || "Something went wrong, please try again"}`,
                {
-                  position: "bottom-center",
+                  position: "bottom-right",
                   autoClose: 2000,
                   hideProgressBar: false,
                   closeOnClick: true,
@@ -43,17 +42,6 @@ const Users = () => {
    return (
       <>
          <UserList users={users} />
-         <ToastContainer
-            position="bottom-right"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable={false}
-            pauseOnHover
-         />
       </>
    );
 };

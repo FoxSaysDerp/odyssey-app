@@ -1,8 +1,7 @@
 import { useState, useContext } from "react";
 import styled from "styled-components";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import {
    VALIDATOR_EMAIL,
@@ -80,7 +79,7 @@ const Auth = () => {
 
       if (isLoginMode) {
          try {
-            await sendRequest(
+            const responseData = await sendRequest(
                "http://localhost:5000/api/users/login",
                "POST",
                {
@@ -91,7 +90,7 @@ const Auth = () => {
                   password: formState.inputs.password.value,
                })
             );
-            auth.login();
+            auth.login(responseData.user.id);
          } catch (err) {
             toast.error(
                `${error ?? "Something went wrong, please try again"}`,
@@ -108,7 +107,7 @@ const Auth = () => {
          }
       } else {
          try {
-            await sendRequest(
+            const responseData = await sendRequest(
                "http://localhost:5000/api/users/register",
                "POST",
                {
@@ -120,7 +119,7 @@ const Auth = () => {
                   password: formState.inputs.password.value,
                })
             );
-            auth.login();
+            auth.login(responseData.user.id);
          } catch (err) {
             toast.error(
                `${err.message ?? "Something went wrong, please try again"}`,
@@ -224,17 +223,6 @@ const Auth = () => {
                </ButtonContainer>
             )}
          </AuthForm>
-         <ToastContainer
-            position="bottom-right"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable={false}
-            pauseOnHover
-         />
       </AuthWrapper>
    );
 };
