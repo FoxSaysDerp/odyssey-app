@@ -20,7 +20,7 @@ const MemoryListWrapper = styled.ul`
    row-gap: 30px;
 `;
 
-const MemoryList = ({ items }) => {
+const MemoryList = ({ items, onDeleteMemory }) => {
    if (items.length === 0) {
       return (
          <MemoriesNotFound>
@@ -41,6 +41,7 @@ const MemoryList = ({ items }) => {
                description={item.description}
                creatorId={item.creator}
                createdOn={item.createdOn}
+               onDelete={onDeleteMemory}
             />
          ))}
       </MemoryListWrapper>

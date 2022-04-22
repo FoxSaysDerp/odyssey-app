@@ -36,10 +36,21 @@ const AllMemories = () => {
       fetchUserMemories();
    }, [sendRequest]);
 
+   const memoryDeletionHandler = (deletedMemoryId) => {
+      setMemories((prevMemories) =>
+         prevMemories.filter((memory) => memory._id !== deletedMemoryId)
+      );
+   };
+
    if (isLoading) {
       return <Spinner asOverlay />;
    }
-   return <MemoryList items={memories} />;
+   return (
+      !isLoading &&
+      memories && (
+         <MemoryList items={memories} onDeleteMemory={memoryDeletionHandler} />
+      )
+   );
 };
 
 export default AllMemories;

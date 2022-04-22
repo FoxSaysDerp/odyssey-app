@@ -38,10 +38,28 @@ const UserMemories = () => {
       fetchUserMemories();
    }, [sendRequest]);
 
+   const memoryDeletionHandler = (deletedMemoryId) => {
+      setMemoriesByUserId((prevMemories) =>
+         prevMemories.filter((memory) => memory._id !== deletedMemoryId)
+      );
+   };
+
    if (isLoading) {
       return <Spinner asOverlay />;
    }
-   return <MemoryList items={memoriesByUserId} />;
+   return (
+      !isLoading &&
+      memoriesByUserId && (
+         <div>
+            <h2>{`${userId}'s memories`}</h2>
+            <MemoryList
+               items={memoriesByUserId}
+               onDeleteMemory={memoryDeletionHandler}
+            />
+            ;
+         </div>
+      )
+   );
 };
 
 export default UserMemories;
