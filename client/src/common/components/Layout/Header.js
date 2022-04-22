@@ -136,6 +136,7 @@ const NavigationLink = styled(NavLink)`
    transition: all 0.3s ease-in-out;
    display: inline-block;
    text-overflow: ellipsis;
+   white-space: nowrap;
    .react-icon {
       height: 2rem;
       width: 2rem;

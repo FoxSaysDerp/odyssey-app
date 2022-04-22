@@ -16,6 +16,8 @@ const MemoriesNotFound = styled.div`
 
 const MemoryListWrapper = styled.ul`
    display: flex;
+   flex-direction: column;
+   row-gap: 30px;
 `;
 
 const MemoryList = ({ items }) => {

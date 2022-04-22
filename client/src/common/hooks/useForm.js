@@ -49,7 +49,6 @@ export const useForm = (initialInputs, initialFormValidity) => {
          isValid: isValid,
          inputId: id,
       });
-      console.log(formState);
    }, []);
 
    const setFormData = useCallback((inputData, formValidity) => {

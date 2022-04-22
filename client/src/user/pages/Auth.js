@@ -1,6 +1,9 @@
 import { useState, useContext } from "react";
 import styled from "styled-components";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {
    VALIDATOR_EMAIL,
    VALIDATOR_MINLENGTH,
@@ -12,6 +15,7 @@ import { AuthContext } from "../../common/context/auth-context";
 import theme from "../../styles/theme";
 import Input from "../../common/components/Input";
 import { button } from "../../common/components/Button";
+import Spinner from "../../common/components/Spinner";
 
 const AuthWrapper = styled.div`
    height: 100vh;
@@ -57,6 +61,7 @@ const Divider = styled.span`
 const Auth = () => {
    const auth = useContext(AuthContext);
    const [isLoginMode, setIsLoginMode] = useState(true);
+   const [isLoading, setIsLoading] = useState(false);
 
    const { formState, inputHandler, setFormData } = useForm({
       email: {
@@ -69,10 +74,84 @@ const Auth = () => {
       },
    });
 
-   const authSubmitHandler = (e) => {
+   const authSubmitHandler = async (e) => {
       e.preventDefault();
-      console.log(formState.inputs);
-      auth.login();
+      setIsLoading(true);
+
+      if (isLoginMode) {
+         try {
+            const response = await fetch(
+               "http://localhost:5000/api/users/login",
+               {
+                  method: "POST",
+                  headers: {
+                     "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                     email: formState.inputs.email.value,
+                     password: formState.inputs.password.value,
+                  }),
+               }
+            );
+            const responseData = await response.json();
+            if (!response.ok) {
+               throw new Error(responseData.message);
+            }
+            setIsLoading(false);
+            auth.login();
+         } catch (err) {
+            setIsLoading(false);
+            toast.error(
+               `${err.message ?? "Something went wrong, please try again"}`,
+               {
+                  position: "bottom-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: false,
+                  progress: 0,
+               }
+            );
+         }
+      } else {
+         try {
+            const response = await fetch(
+               "http://localhost:5000/api/users/register",
+               {
+                  method: "POST",
+                  headers: {
+                     "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                     name: formState.inputs.name.value,
+                     email: formState.inputs.email.value,
+                     password: formState.inputs.password.value,
+                  }),
+               }
+            );
+            const responseData = await response.json();
+            if (!response.ok) {
+               throw new Error(responseData.message);
+            }
+            setIsLoading(false);
+            auth.login();
+         } catch (err) {
+            setIsLoading(false);
+            toast.error(
+               `${err.message ?? "Something went wrong, please try again"}`,
+               {
+                  position: "bottom-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: false,
+                  progress: 0,
+               }
+            );
+         }
+      }
    };
 
    const switchModeHandler = () => {
@@ -101,6 +180,7 @@ const Auth = () => {
 
    return (
       <AuthWrapper>
+         {isLoading && <Spinner asOverlay />}
          <h2>Login to continue</h2>
          <hr />
          <AuthForm onSubmit={authSubmitHandler}>
@@ -138,7 +218,7 @@ const Auth = () => {
                   <Divider />
                   <span>
                      Are you new here?{" "}
-                     <SignUpButton onClick={switchModeHandler}>
+                     <SignUpButton type="button" onClick={switchModeHandler}>
                         Click here
                      </SignUpButton>{" "}
                      to sign up.
@@ -152,7 +232,7 @@ const Auth = () => {
                   <Divider />
                   <span>
                      Do you already have an account?{" "}
-                     <SignUpButton onClick={switchModeHandler}>
+                     <SignUpButton type="button" onClick={switchModeHandler}>
                         Click here
                      </SignUpButton>{" "}
                      to log in.
@@ -160,6 +240,17 @@ const Auth = () => {
                </ButtonContainer>
             )}
          </AuthForm>
+         <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover
+         />
       </AuthWrapper>
    );
 };
