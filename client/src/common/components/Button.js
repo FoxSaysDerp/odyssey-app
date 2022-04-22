@@ -2,6 +2,7 @@ import { css } from "styled-components";
 import theme from "../../styles/theme";
 
 export const button = css`
+   cursor: pointer;
    font-family: ${theme.fonts.poppins};
    text-decoration: none;
    margin: 0;
