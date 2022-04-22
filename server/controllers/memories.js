@@ -54,7 +54,7 @@ const getMemoriesByUserId = async (req, res, next) => {
       );
    }
 
-   res.json({ memory });
+   res.json({ memories });
 };
 
 const createMemory = async (req, res, next) => {

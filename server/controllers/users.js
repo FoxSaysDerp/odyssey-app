@@ -110,6 +110,7 @@ const loginUser = async (req, res, next) => {
 
    res.status(200).json({
       message: `User with email ${existingUser.email} has successfully logged in.`,
+      user: existingUser.toObject({ getters: true }),
    });
 };
 
