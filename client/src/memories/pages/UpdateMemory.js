@@ -1,37 +1,17 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
-import moment from "moment";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../common/context/auth-context";
 
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../../util/validators";
 import { useForm } from "../../common/hooks/useForm";
+import { useHttpClient } from "../../common/hooks/useHttpClient";
 
 import { MemoryFormWrapper } from "./NewMemory";
+import Spinner from "../../common/components/Spinner";
 import Input from "../../common/components/Input";
 import { buttonGradient } from "../../common/components/Button";
-
-const DUMMY_MEMORIES = [
-   {
-      id: "m1",
-      title: "Test title",
-      description:
-         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      imageUrl:
-         "https://images.unsplash.com/photo-1650464187828-d380b8edbc0b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80",
-      creatorId: "foxsaysderp",
-      createdOn: moment().format("LL"),
-   },
-   {
-      id: "m2",
-      title: "Test title 2 Electric Boogaloo",
-      description:
-         "Filler text kekw Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      imageUrl:
-         "https://images.unsplash.com/photo-1650464232600-68f45ea392ad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-      creatorId: "hugephotographer2022",
-      createdOn: moment().format("LL"),
-   },
-];
 
 const MemoryNotFound = styled.div`
    height: 100vh;
@@ -50,10 +30,14 @@ const SubmitMemoryButton = styled.button`
 `;
 
 const UpdateMemory = () => {
-   const [isLoading, setIsLoading] = useState(true);
-   const memoryId = useParams().memoryId;
+   const [loadedMemory, setLoadedMemory] = useState();
 
-   const identifiedMemory = DUMMY_MEMORIES.find((m) => m.id === memoryId);
+   const auth = useContext(AuthContext);
+
+   const memoryId = useParams().memoryId;
+   const history = useHistory();
+
+   const { isLoading, error, sendRequest } = useHttpClient();
 
    const { formState, inputHandler, setFormData } = useForm(
       {
@@ -70,25 +54,79 @@ const UpdateMemory = () => {
    );
 
    useEffect(() => {
-      if (identifiedMemory) {
-         setFormData(
-            {
-               title: {
-                  value: identifiedMemory.title,
-                  isValid: true,
+      const fetchMemoryById = async () => {
+         try {
+            const responseData = await sendRequest(
+               `http://localhost:5000/api/memories/${memoryId}`
+            );
+            setLoadedMemory(responseData.memory);
+            setFormData(
+               {
+                  title: {
+                     value: responseData.memory.title,
+                     isValid: true,
+                  },
+                  description: {
+                     value: responseData.memory.description,
+                     isValid: true,
+                  },
                },
-               description: {
-                  value: identifiedMemory.description,
-                  isValid: true,
-               },
-            },
-            true
-         );
-      }
-      setIsLoading(false);
-   }, [setFormData, identifiedMemory]);
+               true
+            );
+         } catch (err) {
+            toast.error(
+               `${error || "Something went wrong, please try again"}`,
+               {
+                  position: "bottom-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: false,
+                  progress: 0,
+               }
+            );
+         }
+      };
+      fetchMemoryById();
+   }, []);
 
-   if (!identifiedMemory) {
+   const memoryUpdateSubmitHandler = async (e) => {
+      e.preventDefault();
+      try {
+         await sendRequest(
+            `http://localhost:5000/api/memories/${memoryId}`,
+            "PATCH",
+            { "Content-Type": "application/json" },
+            JSON.stringify({
+               title: formState.inputs.title.value,
+               description: formState.inputs.description.value,
+            })
+         );
+         toast.info("Successfully updated a Memory.", {
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: 0,
+         });
+         history.push(`/${auth.userId}/memories`);
+      } catch (err) {
+         toast.error(`${error || "Something went wrong, please try again"}`, {
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: 0,
+         });
+      }
+   };
+
+   if (!loadedMemory && !error) {
       return (
          <MemoryNotFound>
             <span>Could not find Memory, sorry!</span>
@@ -97,35 +135,39 @@ const UpdateMemory = () => {
    }
 
    if (isLoading) {
-      return <div>Loading...</div>;
+      return <Spinner asOverlay />;
    }
 
    return (
-      <MemoryFormWrapper>
-         <Input
-            id="title"
-            type="text"
-            placeholder="Title"
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText="Please enter a valid title."
-            onInput={inputHandler}
-            initialValid={formState.inputs.title.isValid}
-            initialValue={formState.inputs.title.value}
-         />
-         <Input
-            id="description"
-            element="textarea"
-            placeholder="Description"
-            validators={[VALIDATOR_MINLENGTH(5)]}
-            errorText="Please enter a valid description (at least 5 character)."
-            onInput={inputHandler}
-            initialValid={formState.inputs.description.isValid}
-            initialValue={formState.inputs.description.value}
-         />
-         <SubmitMemoryButton type="submit" disabled={!formState.isValid}>
-            Update Memory
-         </SubmitMemoryButton>
-      </MemoryFormWrapper>
+      !isLoading &&
+      loadedMemory && (
+         <MemoryFormWrapper onSubmit={memoryUpdateSubmitHandler}>
+            <h2>Modifying a Memory</h2>
+            <Input
+               id="title"
+               type="text"
+               placeholder="Title"
+               validators={[VALIDATOR_REQUIRE()]}
+               errorText="Please enter a valid title."
+               onInput={inputHandler}
+               initialValid={true}
+               initialValue={loadedMemory.title}
+            />
+            <Input
+               id="description"
+               element="textarea"
+               placeholder="Description"
+               validators={[VALIDATOR_MINLENGTH(5)]}
+               errorText="Please enter a valid description (at least 5 character)."
+               onInput={inputHandler}
+               initialValid={true}
+               initialValue={loadedMemory.description}
+            />
+            <SubmitMemoryButton type="submit" disabled={!formState.isValid}>
+               Update Memory
+            </SubmitMemoryButton>
+         </MemoryFormWrapper>
+      )
    );
 };
 

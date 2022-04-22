@@ -94,6 +94,7 @@ const NewMemory = () => {
    return (
       <MemoryFormContainer>
          <MemoryFormWrapper onSubmit={memorySubmitHandler}>
+            <h2>Creating a Memory</h2>
             {isLoading && <Spinner asOverlay />}
             <Input
                id="title"

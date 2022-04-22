@@ -35,8 +35,8 @@ const MemoryList = ({ items }) => {
          {items.map((item, index) => (
             <MemoryItem
                key={index}
-               id={item.id}
-               imageUrl={item.imageUrl}
+               id={item._id}
+               image={item.image}
                title={item.title}
                description={item.description}
                creatorId={item.creator}

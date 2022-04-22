@@ -58,7 +58,7 @@ const ButtonContainer = styled.div`
 
 const MemoryItem = ({
    id,
-   imageUrl,
+   image,
    title,
    description,
    creatorId,
@@ -68,7 +68,7 @@ const MemoryItem = ({
 
    return (
       <MemoryItemWrapper>
-         <MemoryImage src={imageUrl} alt={title} />
+         <MemoryImage src={image} alt={title} />
          <MemoryInfo>
             <MemoryCreator>{creatorId}</MemoryCreator>
             <MemoryDescription>{description}</MemoryDescription>

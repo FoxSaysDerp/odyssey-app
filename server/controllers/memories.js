@@ -71,7 +71,7 @@ const createMemory = async (req, res, next) => {
    const createdMemory = new Memory({
       title,
       description,
-      image: "https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec",
+      image: "https://assets.puzzlefactory.pl/puzzle/360/686/original.jpg",
       createdOn: moment(),
       creator,
    });
@@ -170,7 +170,6 @@ const deleteMemory = async (req, res, next) => {
       await memory.creator.save({ session: sess });
       await sess.commitTransaction();
    } catch (err) {
-      console.log(err);
       return next(
          new HttpError("Somethign went wrong, could not delete a memory", 500)
       );
