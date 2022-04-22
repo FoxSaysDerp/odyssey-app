@@ -17,10 +17,11 @@ const UserListUl = styled.ul`
    display: flex;
    row-gap: 15px;
    flex-direction: column;
-   width: 600px;
-   margin: 30px auto;
+   width: 100%;
+   margin: 30px 0;
    animation: ${fadeIn} 0.5s ease-in-out;
    transition: all 0.3s ease-in-out;
+   padding: 0;
 `;
 
 const UserList = ({ users }) => {
@@ -32,9 +33,9 @@ const UserList = ({ users }) => {
       );
    }
 
-   users.sort((a, b) => {
-      return b.memoriesCount - a.memoriesCount;
-   });
+   // users.sort((a, b) => {
+   //    return b.memories.length - a.memories.length;
+   // });
 
    return (
       <UserListUl>
@@ -44,8 +45,8 @@ const UserList = ({ users }) => {
                   key={user.id}
                   id={user.id}
                   name={user.name}
-                  picture={user.picture}
-                  memoriesCount={user.memoriesCount}
+                  picture={user.image}
+                  memoriesCount={user.memories.length}
                />
             );
          })}

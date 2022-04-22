@@ -1,9 +1,10 @@
-import theme from "../../styles/theme";
-
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import theme from "../../styles/theme";
+
 const UserItemLi = styled.li`
-   max-width: 640px;
+   width: 100%;
    position: relative;
    list-style-type: none;
    display: grid;
@@ -46,20 +47,32 @@ const UserId = styled.div`
    font-size: 10px;
 `;
 
+const UserLink = styled(Link)`
+   text-decoration: none;
+   color: #000;
+   transition: all 0.3s ease-in-out;
+   &:hover,
+   &:focus {
+      transform: translateY(-2px) scale(1.03);
+   }
+`;
+
 const UserItem = ({ id, name, picture, memoriesCount }) => {
    return (
-      <UserItemLi>
-         <UserPicture
-            src={picture}
-            alt={`${name}'s picture`}
-            className="user-item__picture"
-         />
-         <UserName>{name}</UserName>
-         <UserMemories>
-            Memories: <span>{memoriesCount}</span>
-         </UserMemories>
-         <UserId>{id}</UserId>
-      </UserItemLi>
+      <UserLink to={`${id}/memories`}>
+         <UserItemLi>
+            <UserPicture
+               src={picture}
+               alt={`${name}'s picture`}
+               className="user-item__picture"
+            />
+            <UserName>{name}</UserName>
+            <UserMemories>
+               Memories: <span>{memoriesCount}</span>
+            </UserMemories>
+            <UserId>{id}</UserId>
+         </UserItemLi>
+      </UserLink>
    );
 };
 

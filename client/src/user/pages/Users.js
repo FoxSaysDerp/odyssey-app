@@ -1,43 +1,65 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components";
 
 import UserList from "../components/UserList";
+import Spinner from "../../common/components/Spinner";
 
-const CenterBlock = styled.div`
-   display: "flex";
-   justify-content: "center";
-   align-items: "center";
-   width: "100%";
-   height: "100vh";
-`;
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Users = () => {
-   const [loading, setLoading] = useState(true);
+   const [isLoading, setIsLoading] = useState(true);
    const [users, setUsers] = useState([]);
 
    useEffect(() => {
-      let tempUsers = [];
-      fetch("https://randomuser.me/api/?results=10")
-         .then((res) => res.json())
-         .then((json) => {
-            json.results.map((user) => {
-               let newUser = {
-                  id: user.login.uuid,
-                  name: `${user.name.first} ${user.name.last}`,
-                  picture: user.picture.medium,
-                  memoriesCount: user.dob.age,
-               };
-               tempUsers.push(newUser);
-            });
-            setUsers(tempUsers);
-            setLoading(false);
-         });
+      const sendRequest = async () => {
+         try {
+            const response = await fetch("http://localhost:5000/api/users");
+            const responseData = await response.json();
+
+            if (!response.ok) {
+               throw new Error(responseData.message);
+            }
+
+            setUsers(responseData.users);
+            setIsLoading(false);
+         } catch (err) {
+            setIsLoading(false);
+            toast.error(
+               `${err.message || "Something went wrong, please try again"}`,
+               {
+                  position: "bottom-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: false,
+                  progress: 0,
+               }
+            );
+         }
+      };
+      sendRequest();
    }, []);
 
-   if (loading) {
-      return <CenterBlock>Loading ...</CenterBlock>;
+   if (isLoading) {
+      return <Spinner asOverlay />;
    }
-   return <UserList users={users} />;
+   return (
+      <>
+         <UserList users={users} />
+         <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover
+         />
+      </>
+   );
 };
 
 export default Users;
