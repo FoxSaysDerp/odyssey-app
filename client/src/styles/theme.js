@@ -17,6 +17,7 @@ const theme = {
    },
    shadow: {
       normal: "8px 8px 12px -12px rgba(97, 97, 97, 0.5)",
+      left: "-6px 0px 10px -2px rgba(97, 97, 97, 0.3)",
    },
    mixins: {
       xs: "@media (max-width: 400px)",

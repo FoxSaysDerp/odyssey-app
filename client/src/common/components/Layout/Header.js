@@ -135,6 +135,7 @@ const NavigationLink = styled(NavLink)`
    font-size: 1.5rem;
    transition: all 0.3s ease-in-out;
    display: inline-block;
+   text-overflow: ellipsis;
    .react-icon {
       height: 2rem;
       width: 2rem;
@@ -172,7 +173,7 @@ const MenuButton = styled.button`
    background-color: #fff;
    bottom: 10%;
    color: #000;
-   box-shadow: ${theme.shadow.normal};
+   box-shadow: ${theme.shadow.left};
    cursor: pointer;
 `;
 
