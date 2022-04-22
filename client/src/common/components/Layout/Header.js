@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, NavLink, withRouter } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import classnames from "classnames";
 import theme from "../../../styles/theme";
+import { AuthContext } from "../../context/auth-context";
 
 import { FaCameraRetro } from "react-icons/fa";
-
 import { Container } from "../../../styles/Main";
 
 import nav from "../../../constant/nav";
@@ -161,6 +161,29 @@ const NavigationLink = styled(NavLink)`
       justify-content: center;
       margin-bottom: 15px;
    }
+   &:last-of-type {
+      position: relative;
+      margin-top: 15px;
+      width: 100%;
+      &:before {
+         cursor: default;
+         content: "";
+         position: absolute;
+         top: -15px;
+         left: 50%;
+         transform: translateX(-50%);
+         width: 120%;
+         height: 1px;
+         border-radius: 4px;
+         background-color: ${theme.color.gray};
+         transition: all 0.3s ease-in-out;
+      }
+      &:not(.closed) {
+         &:before {
+            width: 100%;
+         }
+      }
+   }
 `;
 
 const MenuButton = styled.button`
@@ -179,6 +202,8 @@ const MenuButton = styled.button`
 
 const Header = () => {
    const [isClosed, setIsClosed] = useState(true);
+   const auth = useContext(AuthContext);
+
    return (
       <HeaderWrapper className={classnames({ closed: isClosed })}>
          <HeaderContainer className={classnames({ closed: isClosed })}>
@@ -188,17 +213,33 @@ const Header = () => {
             </HeaderLink>
             <Navigation className={classnames({ closed: isClosed })}>
                {nav.map((item, index) => {
-                  return (
-                     <NavigationLink
-                        to={item.link}
-                        key={index}
-                        className={classnames({ closed: isClosed })}
-                        activeClassName="active"
-                        exact
-                     >
-                        {item.icon} <span>{item.label}</span>
-                     </NavigationLink>
-                  );
+                  if (auth.isLoggedIn === false) {
+                     return (
+                        item.loggedIn === false && (
+                           <NavigationLink
+                              to={item.link}
+                              key={index}
+                              className={classnames({ closed: isClosed })}
+                              activeClassName="active"
+                              exact
+                           >
+                              {item.icon} <span>{item.label}</span>
+                           </NavigationLink>
+                        )
+                     );
+                  } else {
+                     return (
+                        <NavigationLink
+                           to={item.link}
+                           key={index}
+                           className={classnames({ closed: isClosed })}
+                           activeClassName="active"
+                           exact
+                        >
+                           {item.icon} <span>{item.label}</span>
+                        </NavigationLink>
+                     );
+                  }
                })}
             </Navigation>
             <MenuButton onClick={() => setIsClosed(!isClosed)}>

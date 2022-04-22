@@ -8,13 +8,13 @@ const nav = [
       icon: <BiHomeAlt className="react-icon" />,
       label: "Home",
       link: "/",
-      loggedIn: true,
+      loggedIn: false,
    },
    {
       icon: <BsPeople className="react-icon" />,
       label: "All users",
       link: "/users",
-      loggedIn: true,
+      loggedIn: false,
    },
    {
       icon: <FaRegImages className="react-icon" />,

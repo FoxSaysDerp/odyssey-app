@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styled from "styled-components";
 
 import {
@@ -7,10 +7,11 @@ import {
    VALIDATOR_REQUIRE,
 } from "../../util/validators";
 import { useForm } from "../../common/hooks/useForm";
+import { AuthContext } from "../../common/context/auth-context";
 
+import theme from "../../styles/theme";
 import Input from "../../common/components/Input";
 import { button } from "../../common/components/Button";
-import theme from "../../styles/theme";
 
 const AuthWrapper = styled.div`
    height: 100vh;
@@ -54,6 +55,7 @@ const Divider = styled.span`
 `;
 
 const Auth = () => {
+   const auth = useContext(AuthContext);
    const [isLoginMode, setIsLoginMode] = useState(true);
 
    const { formState, inputHandler, setFormData } = useForm({
@@ -70,6 +72,7 @@ const Auth = () => {
    const authSubmitHandler = (e) => {
       e.preventDefault();
       console.log(formState.inputs);
+      auth.login();
    };
 
    const switchModeHandler = () => {

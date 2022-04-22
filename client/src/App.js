@@ -11,6 +11,7 @@ import Header from "./common/components/Layout/Header";
 import Users from "./user/pages/Users";
 import Auth from "./user/pages/Auth";
 
+import AllMemories from "./memories/pages/AllMemories";
 import NewMemory from "./memories/pages/NewMemory";
 import UpdateMemory from "./memories/pages/UpdateMemory";
 import UserMemories from "./memories/pages/UserMemories";
@@ -25,30 +26,37 @@ const App = () => {
       setIsLoggedIn(false);
    }, []);
 
+   let routes;
+
+   if (isLoggedIn) {
+      routes = (
+         <Switch>
+            <Route path="/" component={AllMemories} exact />
+            <Route path="/users" component={Users} exact />
+            <Route path="/memories/new" component={NewMemory} exact />
+            <Route path="/memories/:memoryId" component={UpdateMemory} exact />
+            <Route path="/:userId/memories" component={UserMemories} exact />
+            <Redirect to="/" />
+         </Switch>
+      );
+   } else {
+      routes = (
+         <Switch>
+            <Route path="/" component={AllMemories} exact />
+            <Route path="/users" component={Users} exact />
+            <Route path="/:userId/memories" component={UserMemories} exact />
+            <Route path="/auth" component={Auth} exact />
+            <Redirect to="/auth" />
+         </Switch>
+      );
+   }
    return (
       <AuthContext.Provider
          value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
       >
          <BrowserRouter>
             <Header />
-            <Main>
-               <Switch>
-                  <Route path="/users" component={Users} exact />
-                  <Route path="/memories/new" component={NewMemory} exact />
-                  <Route
-                     path="/memories/:memoryId"
-                     component={UpdateMemory}
-                     exact
-                  />
-                  <Route path="/auth" component={Auth} exact />
-                  <Route
-                     path="/:userId/memories"
-                     component={UserMemories}
-                     exact
-                  />
-                  <Redirect to="/" />
-               </Switch>
-            </Main>
+            <Main>{routes}</Main>
          </BrowserRouter>
       </AuthContext.Provider>
    );
