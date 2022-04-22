@@ -6,6 +6,25 @@ const HttpError = require("../models/http-error");
 const Memory = require("../models/memory");
 const User = require("../models/user");
 
+const getAllMemories = async (req, res, next) => {
+   let memories;
+   try {
+      memories = await Memory.find();
+   } catch (err) {
+      const error = new HttpError(
+         "Something went wrong, count not fetch memories",
+         500
+      );
+      return next(error);
+   }
+
+   if (!memories || memories.length === 0) {
+      return next(new HttpError("Could not fetch memories.", 404));
+   }
+
+   res.json({ memories });
+};
+
 const getMemoryById = async (req, res, next) => {
    const memoryId = req.params.mid;
 
@@ -186,6 +205,7 @@ const deleteMemory = async (req, res, next) => {
    res.status(200).json({ message: `Deleted Memory with id: ${memoryId}` });
 };
 
+exports.getAllMemories = getAllMemories;
 exports.getMemoryById = getMemoryById;
 exports.getMemoriesByUserId = getMemoriesByUserId;
 exports.createMemory = createMemory;

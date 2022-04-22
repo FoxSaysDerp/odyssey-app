@@ -5,6 +5,8 @@ const memoriesControllers = require("../controllers/memories");
 
 const router = express.Router();
 
+router.get("/all", memoriesControllers.getAllMemories);
+
 router.get("/:mid", memoriesControllers.getMemoryById);
 
 router.get("/user/:uid", memoriesControllers.getMemoriesByUserId);
