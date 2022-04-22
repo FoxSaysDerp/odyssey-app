@@ -2,6 +2,7 @@ import { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../common/context/auth-context";
+import moment from "moment";
 
 import { button } from "../../common/components/Button";
 import { HiPencilAlt } from "react-icons/hi";
@@ -11,11 +12,12 @@ const MemoryItemWrapper = styled.div`
    display: block;
    position: relative;
    overflow: hidden;
-   border-radius: 16px;
+   margin: 15px 0;
 `;
 
 const MemoryImage = styled.img`
    max-width: 100%;
+   border-radius: 16px;
 `;
 
 const MemoryInfo = styled.div`
@@ -37,6 +39,7 @@ const MemoryDate = styled.div`
    top: 15px;
    left: 15px;
    color: #fff;
+   text-shadow: 0px 0px 5px #000;
 `;
 
 const EditButton = styled(Link)`
@@ -72,7 +75,7 @@ const MemoryItem = ({
          <MemoryInfo>
             <MemoryCreator>{creatorId}</MemoryCreator>
             <MemoryDescription>{description}</MemoryDescription>
-            <MemoryDate>{createdOn}</MemoryDate>
+            <MemoryDate>{moment(createdOn).format("LLL")}</MemoryDate>
          </MemoryInfo>
          {auth.userId === creatorId && (
             <ButtonContainer>
