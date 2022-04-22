@@ -1,10 +1,9 @@
 import styled from "styled-components";
-import { button, buttonGradient } from "../../common/components/Button";
+import { buttonGradient } from "../../common/components/Button";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 const AddMemoryButtonWrapper = styled(Link)`
-   ${button}
    ${buttonGradient}
    .react-icon {
       color: #fff;

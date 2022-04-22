@@ -2,15 +2,16 @@ import { css } from "styled-components";
 import theme from "../../styles/theme";
 
 export const button = css`
+   font-family: ${theme.fonts.poppins};
    text-decoration: none;
    margin: 0;
    outline: 0;
    border: 0;
-   padding: 12px 15px;
+   padding: 10px 30px;
    background-color: ${theme.color.mainColor};
-   font-size: 1.2rem;
+   font-size: 1.1rem;
    color: #fff;
-   border-radius: 8px;
+   border-radius: 16px;
    border: 1px solid transparent;
    transition: all 0.3s ease-in-out;
    display: flex;
@@ -44,6 +45,7 @@ export const button = css`
 `;
 
 export const buttonGradient = css`
+   ${button}
    background: ${theme.gradient.main};
    font-weight: 500;
    border: none;

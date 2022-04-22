@@ -8,7 +8,7 @@ import { useForm } from "../../common/hooks/useForm";
 
 import { MemoryFormWrapper } from "./NewMemory";
 import Input from "../../common/components/Input";
-import { button, buttonGradient } from "../../common/components/Button";
+import { buttonGradient } from "../../common/components/Button";
 
 const DUMMY_MEMORIES = [
    {
@@ -46,7 +46,6 @@ const MemoryNotFound = styled.div`
 `;
 
 const SubmitMemoryButton = styled.button`
-   ${button}
    ${buttonGradient}
 `;
 

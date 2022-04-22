@@ -5,7 +5,7 @@ import { useForm } from "../../common/hooks/useForm";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../util/validators";
 
 import Input from "../../common/components/Input";
-import { button, buttonGradient } from "../../common/components/Button";
+import { buttonGradient } from "../../common/components/Button";
 
 export const MemoryFormWrapper = styled.form`
    display: flex;
@@ -17,7 +17,6 @@ export const MemoryFormWrapper = styled.form`
 `;
 
 const SubmitMemoryButton = styled.button`
-   ${button}
    ${buttonGradient}
 `;
 
