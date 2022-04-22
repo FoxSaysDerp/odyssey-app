@@ -1,32 +1,45 @@
-import React from "react";
-import MemoryList from "../components/MemoryList";
-import moment from "moment";
+import { useState, useEffect } from "react";
 
-const DUMMY_MEMORIES = [
-   {
-      id: "m1",
-      title: "Test title",
-      description:
-         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      imageUrl:
-         "https://images.unsplash.com/photo-1650464187828-d380b8edbc0b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80",
-      creatorId: "foxsaysderp",
-      createdOn: moment().format("LL"),
-   },
-   {
-      id: "m2",
-      title: "Test title",
-      description:
-         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      imageUrl:
-         "https://images.unsplash.com/photo-1650464232600-68f45ea392ad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-      creatorId: "hugephotographer2022",
-      createdOn: moment().format("LL"),
-   },
-];
+import { toast } from "react-toastify";
+import { useHttpClient } from "../../common/hooks/useHttpClient";
+
+import MemoryList from "../components/MemoryList";
+import Spinner from "../../common/components/Spinner";
 
 const AllMemories = () => {
-   return <MemoryList items={DUMMY_MEMORIES} />;
+   const [memories, setMemories] = useState([]);
+
+   const { sendRequest, error, isLoading } = useHttpClient();
+
+   useEffect(() => {
+      const fetchUserMemories = async () => {
+         try {
+            const responseData = await sendRequest(
+               "http://localhost:5000/api/memories/all"
+            );
+            setMemories(responseData.memories.reverse());
+         } catch (err) {
+            toast.error(
+               `${error || "Something went wrong, please try again"}`,
+               {
+                  position: "bottom-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: false,
+                  progress: 0,
+               }
+            );
+         }
+      };
+      fetchUserMemories();
+   }, [sendRequest]);
+
+   if (isLoading) {
+      return <Spinner asOverlay />;
+   }
+   return <MemoryList items={memories} />;
 };
 
 export default AllMemories;
