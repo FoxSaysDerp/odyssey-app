@@ -10,6 +10,7 @@ import Header from "./common/components/Layout/Header";
 
 import Users from "./user/pages/Users";
 import Auth from "./user/pages/Auth";
+import Logout from "./user/pages/Logout";
 
 import AllMemories from "./memories/pages/AllMemories";
 import NewMemory from "./memories/pages/NewMemory";
@@ -36,6 +37,7 @@ const App = () => {
             <Route path="/memories/new" component={NewMemory} exact />
             <Route path="/memories/:memoryId" component={UpdateMemory} exact />
             <Route path="/:userId/memories" component={UserMemories} exact />
+            <Route path="/logout" component={Logout} exact />
             <Redirect to="/" />
          </Switch>
       );

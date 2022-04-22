@@ -215,7 +215,8 @@ const Header = () => {
                {nav.map((item, index) => {
                   if (auth.isLoggedIn === false) {
                      return (
-                        item.loggedIn === false && (
+                        (item.loggedIn === false ||
+                           item.loggedIn === "common") && (
                            <NavigationLink
                               to={item.link}
                               key={index}
@@ -229,15 +230,18 @@ const Header = () => {
                      );
                   } else {
                      return (
-                        <NavigationLink
-                           to={item.link}
-                           key={index}
-                           className={classnames({ closed: isClosed })}
-                           activeClassName="active"
-                           exact
-                        >
-                           {item.icon} <span>{item.label}</span>
-                        </NavigationLink>
+                        (item.loggedIn === true ||
+                           item.loggedIn === "common") && (
+                           <NavigationLink
+                              to={item.link}
+                              key={index}
+                              className={classnames({ closed: isClosed })}
+                              activeClassName="active"
+                              exact
+                           >
+                              {item.icon} <span>{item.label}</span>
+                           </NavigationLink>
+                        )
                      );
                   }
                })}
