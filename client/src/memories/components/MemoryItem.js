@@ -76,12 +76,12 @@ const MemoryItem = ({
          </MemoryInfo>
          {auth.userId === creatorId && (
             <ButtonContainer>
-               <DeleteButton>
-                  <MdDelete className="react-icon" /> <span>Delete</span>
-               </DeleteButton>
                <EditButton to={`/memories/${id}`}>
                   <HiPencilAlt className="react-icon" /> <span>Edit</span>
                </EditButton>
+               <DeleteButton>
+                  <MdDelete className="react-icon" /> <span>Delete</span>
+               </DeleteButton>
             </ButtonContainer>
          )}
       </MemoryItemWrapper>
