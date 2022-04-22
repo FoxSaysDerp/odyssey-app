@@ -213,7 +213,7 @@ const Header = () => {
                <Logo className={classnames({ closed: isClosed })}>Odyssey</Logo>
             </HeaderLink>
             <Navigation className={classnames({ closed: isClosed })}>
-               {nav.map((item, index) => {
+               {nav(auth.userId).map((item, index) => {
                   if (auth.isLoggedIn === false) {
                      return (
                         (item.loggedIn === false ||

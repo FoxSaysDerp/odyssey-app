@@ -3,7 +3,7 @@ import { FaRegImages } from "react-icons/fa";
 import { BiImageAdd, BiHomeAlt } from "react-icons/bi";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
 
-const nav = [
+const nav = (userId) => [
    {
       icon: <BiHomeAlt className="react-icon" />,
       label: "Home",
@@ -19,7 +19,7 @@ const nav = [
    {
       icon: <FaRegImages className="react-icon" />,
       label: "My Memories",
-      link: "/u1/memories",
+      link: `/${userId}/memories`,
       loggedIn: true,
    },
    {

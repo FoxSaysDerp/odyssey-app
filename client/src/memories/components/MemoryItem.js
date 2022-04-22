@@ -1,5 +1,8 @@
+import { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../common/context/auth-context";
+
 import { button } from "../../common/components/Button";
 import { HiPencilAlt } from "react-icons/hi";
 import { MdDelete } from "react-icons/md";
@@ -61,6 +64,8 @@ const MemoryItem = ({
    creatorId,
    createdOn,
 }) => {
+   const auth = useContext(AuthContext);
+
    return (
       <MemoryItemWrapper>
          <MemoryImage src={imageUrl} alt={title} />
@@ -69,14 +74,16 @@ const MemoryItem = ({
             <MemoryDescription>{description}</MemoryDescription>
             <MemoryDate>{createdOn}</MemoryDate>
          </MemoryInfo>
-         <ButtonContainer>
-            <DeleteButton>
-               <MdDelete className="react-icon" /> <span>Delete</span>
-            </DeleteButton>
-            <EditButton to={`/memories/${id}`}>
-               <HiPencilAlt className="react-icon" /> <span>Edit</span>
-            </EditButton>
-         </ButtonContainer>
+         {auth.userId === creatorId && (
+            <ButtonContainer>
+               <DeleteButton>
+                  <MdDelete className="react-icon" /> <span>Delete</span>
+               </DeleteButton>
+               <EditButton to={`/memories/${id}`}>
+                  <HiPencilAlt className="react-icon" /> <span>Edit</span>
+               </EditButton>
+            </ButtonContainer>
+         )}
       </MemoryItemWrapper>
    );
 };
