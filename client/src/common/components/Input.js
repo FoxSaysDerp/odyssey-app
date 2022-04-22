@@ -18,8 +18,10 @@ const InputLabel = styled.label`
 const InputField = styled.input`
    display: block;
    width: calc(100% - 6px);
-   padding: 3px 4px;
-   margin: 0;
+   padding: 5px 7px;
+   font-size: 1.25rem;
+   margin: 10px 0 30px 0;
+   max-width: calc(100% - 14px);
    ${({ isValid, isTouched }) =>
       !isValid &&
       isTouched &&
@@ -43,6 +45,7 @@ const InputTextArea = styled.textarea`
 
 const ErrorText = styled.p`
    display: block;
+   width: fit-content;
    font-size: 0.8rem;
    color: #831c21;
    background-color: #f8d7da;
@@ -50,7 +53,8 @@ const ErrorText = styled.p`
    border-radius: 8px;
    padding: 8px;
    width: calc(100% - 16px);
-   text-align: center;
+   text-align: left;
+   margin-top: -10px;
 `;
 
 const inputReducer = (state, action) => {
