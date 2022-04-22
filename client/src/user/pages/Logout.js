@@ -21,7 +21,7 @@ const Logout = () => {
    useEffect(() => {
       const timer = setTimeout(() => {
          auth.logout();
-      }, 2000);
+      }, 1500);
       return () => clearTimeout(timer);
    }, []);
 

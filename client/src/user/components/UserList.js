@@ -33,9 +33,9 @@ const UserList = ({ users }) => {
       );
    }
 
-   // users.sort((a, b) => {
-   //    return b.memories.length - a.memories.length;
-   // });
+   users.sort((a, b) => {
+      return b.memories.length - a.memories.length;
+   });
 
    return (
       <UserListUl>

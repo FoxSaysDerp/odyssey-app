@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useHttpClient } from "../../common/hooks/useHttpClient";
 
 import UserList from "../components/UserList";
 import Spinner from "../../common/components/Spinner";
@@ -7,28 +8,23 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Users = () => {
-   const [isLoading, setIsLoading] = useState(true);
+   const { isLoading, error, sendRequest } = useHttpClient();
    const [users, setUsers] = useState([]);
 
    useEffect(() => {
-      const sendRequest = async () => {
+      const fetchUsers = async () => {
          try {
-            const response = await fetch("http://localhost:5000/api/users");
-            const responseData = await response.json();
-
-            if (!response.ok) {
-               throw new Error(responseData.message);
-            }
+            const responseData = await sendRequest(
+               "http://localhost:5000/api/users"
+            );
 
             setUsers(responseData.users);
-            setIsLoading(false);
          } catch (err) {
-            setIsLoading(false);
             toast.error(
-               `${err.message || "Something went wrong, please try again"}`,
+               `${error || "Something went wrong, please try again"}`,
                {
                   position: "bottom-center",
-                  autoClose: 5000,
+                  autoClose: 2000,
                   hideProgressBar: false,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -38,8 +34,8 @@ const Users = () => {
             );
          }
       };
-      sendRequest();
-   }, []);
+      fetchUsers();
+   }, [sendRequest]);
 
    if (isLoading) {
       return <Spinner asOverlay />;
@@ -49,7 +45,7 @@ const Users = () => {
          <UserList users={users} />
          <ToastContainer
             position="bottom-right"
-            autoClose={5000}
+            autoClose={2000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick

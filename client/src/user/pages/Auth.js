@@ -10,6 +10,7 @@ import {
    VALIDATOR_REQUIRE,
 } from "../../util/validators";
 import { useForm } from "../../common/hooks/useForm";
+import { useHttpClient } from "../../common/hooks/useHttpClient";
 import { AuthContext } from "../../common/context/auth-context";
 
 import theme from "../../styles/theme";
@@ -61,7 +62,7 @@ const Divider = styled.span`
 const Auth = () => {
    const auth = useContext(AuthContext);
    const [isLoginMode, setIsLoginMode] = useState(true);
-   const [isLoading, setIsLoading] = useState(false);
+   const { isLoading, error, sendRequest } = useHttpClient();
 
    const { formState, inputHandler, setFormData } = useForm({
       email: {
@@ -76,33 +77,24 @@ const Auth = () => {
 
    const authSubmitHandler = async (e) => {
       e.preventDefault();
-      setIsLoading(true);
 
       if (isLoginMode) {
          try {
-            const response = await fetch(
+            await sendRequest(
                "http://localhost:5000/api/users/login",
+               "POST",
                {
-                  method: "POST",
-                  headers: {
-                     "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                     email: formState.inputs.email.value,
-                     password: formState.inputs.password.value,
-                  }),
-               }
+                  "Content-Type": "application/json",
+               },
+               JSON.stringify({
+                  email: formState.inputs.email.value,
+                  password: formState.inputs.password.value,
+               })
             );
-            const responseData = await response.json();
-            if (!response.ok) {
-               throw new Error(responseData.message);
-            }
-            setIsLoading(false);
             auth.login();
          } catch (err) {
-            setIsLoading(false);
             toast.error(
-               `${err.message ?? "Something went wrong, please try again"}`,
+               `${error ?? "Something went wrong, please try again"}`,
                {
                   position: "bottom-right",
                   autoClose: 2000,
@@ -116,28 +108,20 @@ const Auth = () => {
          }
       } else {
          try {
-            const response = await fetch(
+            await sendRequest(
                "http://localhost:5000/api/users/register",
+               "POST",
                {
-                  method: "POST",
-                  headers: {
-                     "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                     name: formState.inputs.name.value,
-                     email: formState.inputs.email.value,
-                     password: formState.inputs.password.value,
-                  }),
-               }
+                  "Content-Type": "application/json",
+               },
+               JSON.stringify({
+                  name: formState.inputs.name.value,
+                  email: formState.inputs.email.value,
+                  password: formState.inputs.password.value,
+               })
             );
-            const responseData = await response.json();
-            if (!response.ok) {
-               throw new Error(responseData.message);
-            }
-            setIsLoading(false);
             auth.login();
          } catch (err) {
-            setIsLoading(false);
             toast.error(
                `${err.message ?? "Something went wrong, please try again"}`,
                {
@@ -242,7 +226,7 @@ const Auth = () => {
          </AuthForm>
          <ToastContainer
             position="bottom-right"
-            autoClose={5000}
+            autoClose={2000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick

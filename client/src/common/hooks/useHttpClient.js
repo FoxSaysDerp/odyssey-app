@@ -7,30 +7,35 @@ export const useHttpClient = () => {
    const activeHttpRequests = useRef([]);
 
    const sendRequest = useCallback(
-      async (url, method = "GET", body = null, headers = {}) => {
+      async (url, method = "GET", headers = {}, body = null) => {
          setIsLoading(true);
 
-         const httpAbortCtrll = new AbortController();
-         activeHttpRequests.current.push(httpAbortCtrll);
+         const httpAbortCtrl = new AbortController();
+         activeHttpRequests.current.push(httpAbortCtrl);
 
          try {
             const response = await fetch(url, {
                method,
                body,
                headers,
-               signal: httpAbortCtrll,
+               signal: httpAbortCtrl.signal,
             });
             const responseData = await response.json();
 
+            activeHttpRequests.current = activeHttpRequests.current.filter(
+               (reqCtrl) => reqCtrl !== httpAbortCtrl
+            );
+
             if (!response.ok) {
+               setError(responseData.message);
                throw new Error(responseData.messsage);
             }
-
+            setIsLoading(false);
             return responseData;
          } catch (err) {
-            setError(err);
+            setIsLoading(false);
+            throw err;
          }
-         setIsLoading(false);
       },
       []
    );
