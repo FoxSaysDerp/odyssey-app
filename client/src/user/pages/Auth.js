@@ -16,6 +16,7 @@ import theme from "../../styles/theme";
 import Input from "../../common/components/Input";
 import { button } from "../../common/components/Button";
 import Spinner from "../../common/components/Spinner";
+import ImageUpload from "../../common/components/ImageUpload";
 
 const AuthWrapper = styled.div`
    height: 100vh;
@@ -122,7 +123,7 @@ const Auth = () => {
             auth.login(responseData.user.id);
          } catch (err) {
             toast.error(
-               `${err.message ?? "Something went wrong, please try again"}`,
+               `${error ?? "Something went wrong, please try again"}`,
                {
                   position: "bottom-right",
                   autoClose: 2000,
@@ -137,12 +138,15 @@ const Auth = () => {
       }
    };
 
+   console.log(formState);
+
    const switchModeHandler = () => {
       if (!isLoginMode) {
          setFormData(
             {
                ...formState.inputs,
                name: undefined,
+               image: undefined,
             },
             formState.inputs.email.isValid && formState.inputs.password.isValid
          );
@@ -152,6 +156,10 @@ const Auth = () => {
                ...formState.inputs,
                name: {
                   value: "",
+                  isValid: false,
+               },
+               image: {
+                  value: null,
                   isValid: false,
                },
             },
@@ -193,6 +201,7 @@ const Auth = () => {
                errorText="Please enter a valid password (at least 10 characters)."
                onInput={inputHandler}
             />
+            {!isLoginMode && <ImageUpload id="image" onInput={inputHandler} />}
             {isLoginMode ? (
                <ButtonContainer>
                   <SubmitButton type="submit" disabled={!formState.isValid}>
