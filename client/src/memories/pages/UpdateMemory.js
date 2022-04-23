@@ -144,24 +144,24 @@ const UpdateMemory = () => {
          <MemoryFormWrapper onSubmit={memoryUpdateSubmitHandler}>
             <h2>Modifying a Memory</h2>
             <Input
-               id="title"
-               type="text"
-               placeholder="Title"
-               validators={[VALIDATOR_REQUIRE()]}
-               errorText="Please enter a valid title."
-               onInput={inputHandler}
-               initialValid={true}
-               initialValue={loadedMemory.title}
-            />
-            <Input
                id="description"
                element="textarea"
-               placeholder="Description"
+               label="Description"
                validators={[VALIDATOR_MINLENGTH(5)]}
                errorText="Please enter a valid description (at least 5 character)."
                onInput={inputHandler}
                initialValid={true}
                initialValue={loadedMemory.description}
+            />
+            <Input
+               id="title"
+               type="text"
+               label="Title"
+               validators={[VALIDATOR_REQUIRE()]}
+               errorText="Please enter a valid title."
+               onInput={inputHandler}
+               initialValid={true}
+               initialValue={loadedMemory.title}
             />
             <SubmitMemoryButton type="submit" disabled={!formState.isValid}>
                Update Memory

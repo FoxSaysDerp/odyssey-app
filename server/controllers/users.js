@@ -56,14 +56,10 @@ const createUser = async (req, res, next) => {
 
    const { name, email, password } = req.body;
 
-   const filePath = req.file.path;
-   const correctPath = pathToUnix(filePath);
-   console.log(correctPath);
-
    const createdUser = new User({
       name,
       email,
-      image: "http://localhost:5000/" + correctPath,
+      image: "http://localhost:5000/" + pathToUnix(req.file.path),
       password,
       memories: [],
       createdOn: moment(),

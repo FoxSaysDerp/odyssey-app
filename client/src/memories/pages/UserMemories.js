@@ -56,7 +56,6 @@ const UserMemories = () => {
                items={memoriesByUserId}
                onDeleteMemory={memoryDeletionHandler}
             />
-            ;
          </div>
       )
    );

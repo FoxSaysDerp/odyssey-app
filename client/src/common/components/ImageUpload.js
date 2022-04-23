@@ -41,10 +41,10 @@ const ImageUploadPreview = styled.div`
 
 const PickAvatarButton = styled.button`
    ${button}
-   margin-bottom: 45px;
+   margin-bottom: 15px;
 `;
 
-const ImageUpload = ({ id, onInput }) => {
+const ImageUpload = ({ id, onInput, buttonText }) => {
    const [file, setFile] = useState();
    const [previewUrl, setPreviewUrl] = useState();
    const [isValid, setIsValid] = useState(false);
@@ -97,7 +97,7 @@ const ImageUpload = ({ id, onInput }) => {
                {!previewUrl && <p>Please pick an image.</p>}
             </ImageUploadPreview>
             <PickAvatarButton type="button" onClick={pickAvatarHandler}>
-               Upload your Avatar
+               {buttonText ? buttonText : "Pick image"}
             </PickAvatarButton>
          </ImageUploadWrapper>
       </ImageUploadContainer>

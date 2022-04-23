@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const moment = require("moment");
 const mongoose = require("mongoose");
 
+const pathToUnix = require("../util/path-to-unix");
 const HttpError = require("../models/http-error");
 const Memory = require("../models/memory");
 const User = require("../models/user");
@@ -90,7 +91,7 @@ const createMemory = async (req, res, next) => {
    const createdMemory = new Memory({
       title,
       description,
-      image: "https://assets.puzzlefactory.pl/puzzle/360/686/original.jpg",
+      image: "http://localhost:5000/" + pathToUnix(req.file.path),
       createdOn: moment(),
       creator,
    });

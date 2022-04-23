@@ -11,6 +11,7 @@ import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../util/validators";
 import Spinner from "../../common/components/Spinner";
 import Input from "../../common/components/Input";
 import { buttonGradient } from "../../common/components/Button";
+import ImageUpload from "../../common/components/ImageUpload";
 
 const MemoryFormContainer = styled.div`
    display: flex;
@@ -47,6 +48,10 @@ const NewMemory = () => {
             value: "",
             isValid: false,
          },
+         image: {
+            value: null,
+            isValid: false,
+         },
       },
       false
    );
@@ -58,15 +63,17 @@ const NewMemory = () => {
    const memorySubmitHandler = async (e) => {
       e.preventDefault();
       try {
+         const formData = new FormData();
+         formData.append("title", formState.inputs.title.value);
+         formData.append("description", formState.inputs.description.value);
+         formData.append("image", formState.inputs.image.value);
+         formData.append("creator", auth.userId);
+
          await sendRequest(
             "http://localhost:5000/api/memories",
             "POST",
-            { "Content-Type": "application/json" },
-            JSON.stringify({
-               title: formState.inputs.title.value,
-               description: formState.inputs.description.value,
-               creator: auth.userId,
-            })
+            {},
+            formData
          );
          toast.success("Successfully created a Memory!", {
             position: "bottom-right",
@@ -96,20 +103,25 @@ const NewMemory = () => {
          <MemoryFormWrapper onSubmit={memorySubmitHandler}>
             <h2>Creating a Memory</h2>
             {isLoading && <Spinner asOverlay />}
-            <Input
-               id="title"
-               type="text"
-               placeholder="Title"
-               validators={[VALIDATOR_REQUIRE()]}
-               errorText="Please enter a valid title."
+            <ImageUpload
+               id="image"
                onInput={inputHandler}
+               errorText="Please provide an image."
             />
             <Input
                id="description"
                element="textarea"
-               placeholder="Description"
+               label="Description"
                validators={[VALIDATOR_MINLENGTH(5)]}
                errorText="Please enter a valid description (at least 5 character)."
+               onInput={inputHandler}
+            />
+            <Input
+               id="title"
+               type="text"
+               label="Title"
+               validators={[VALIDATOR_REQUIRE()]}
+               errorText="Please enter a valid title."
                onInput={inputHandler}
             />
             <SubmitMemoryButton type="submit" disabled={!formState.isValid}>

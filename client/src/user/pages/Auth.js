@@ -201,7 +201,14 @@ const Auth = () => {
                errorText="Please enter a valid password (at least 10 characters)."
                onInput={inputHandler}
             />
-            {!isLoginMode && <ImageUpload id="image" onInput={inputHandler} />}
+            {!isLoginMode && (
+               <ImageUpload
+                  id="image"
+                  onInput={inputHandler}
+                  buttonText="Upload an Avatar"
+                  errorText="Please provide an image."
+               />
+            )}
             {isLoginMode ? (
                <ButtonContainer>
                   <SubmitButton type="submit" disabled={!formState.isValid}>
