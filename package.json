@@ -1,0 +1,10 @@
+{
+   "name": "odyssey-app-root",
+   "version": "0.1.0",
+   "scripts": {
+     "client": "npm --prefix client run",
+     "server": "npm --prefix server run"
+   },
+   "private": true
+ }
+ 
