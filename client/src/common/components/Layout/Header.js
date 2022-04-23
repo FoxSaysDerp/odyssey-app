@@ -1,12 +1,13 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { Link, NavLink, withRouter } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import classnames from "classnames";
 import theme from "../../../styles/theme";
 import { AuthContext } from "../../context/auth-context";
+import { ThemeContext } from "../../context/theme-context";
 
 import { FaCameraRetro } from "react-icons/fa";
-import { Container } from "../../../styles/Main";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
 import nav from "../../../constant/nav";
 
@@ -66,7 +67,7 @@ const HeaderWrapper = styled.header`
    }
 `;
 
-const HeaderContainer = styled(Container)`
+const HeaderContainer = styled.div`
    display: flex;
    flex-direction: column;
    justify-content: center;
@@ -202,17 +203,32 @@ const MenuButton = styled.button`
 `;
 
 const Header = () => {
-   const [isClosed, setIsClosed] = useState(true);
    const auth = useContext(AuthContext);
+   const appTheme = useContext(ThemeContext);
 
    return (
-      <HeaderWrapper className={classnames({ closed: isClosed })}>
-         <HeaderContainer className={classnames({ closed: isClosed })}>
-            <HeaderLink className={classnames({ closed: isClosed })} to="/">
-               <LogoIcon className={classnames({ closed: isClosed })} />
-               <Logo className={classnames({ closed: isClosed })}>Odyssey</Logo>
+      <HeaderWrapper
+         className={classnames({ closed: appTheme.isMenuExpanded })}
+      >
+         <HeaderContainer
+            className={classnames({ closed: appTheme.isMenuExpanded })}
+         >
+            <HeaderLink
+               className={classnames({ closed: appTheme.isMenuExpanded })}
+               to="/"
+            >
+               <LogoIcon
+                  className={classnames({ closed: appTheme.isMenuExpanded })}
+               />
+               <Logo
+                  className={classnames({ closed: appTheme.isMenuExpanded })}
+               >
+                  Odyssey
+               </Logo>
             </HeaderLink>
-            <Navigation className={classnames({ closed: isClosed })}>
+            <Navigation
+               className={classnames({ closed: appTheme.isMenuExpanded })}
+            >
                {nav(auth.userId).map((item, index) => {
                   if (auth.isLoggedIn === false) {
                      return (
@@ -221,7 +237,9 @@ const Header = () => {
                            <NavigationLink
                               to={item.link}
                               key={index}
-                              className={classnames({ closed: isClosed })}
+                              className={classnames({
+                                 closed: appTheme.isMenuExpanded,
+                              })}
                               activeClassName="active"
                               exact
                            >
@@ -236,7 +254,9 @@ const Header = () => {
                            <NavigationLink
                               to={item.link}
                               key={index}
-                              className={classnames({ closed: isClosed })}
+                              className={classnames({
+                                 closed: appTheme.isMenuExpanded,
+                              })}
                               activeClassName="active"
                               exact
                            >
@@ -247,8 +267,12 @@ const Header = () => {
                   }
                })}
             </Navigation>
-            <MenuButton onClick={() => setIsClosed(!isClosed)}>
-               {isClosed ? ">" : "<"}
+            <MenuButton onClick={appTheme.toggleMenuExpansion}>
+               {appTheme.isMenuExpanded ? (
+                  <IoIosArrowForward />
+               ) : (
+                  <IoIosArrowBack />
+               )}
             </MenuButton>
          </HeaderContainer>
       </HeaderWrapper>

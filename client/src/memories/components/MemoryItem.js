@@ -14,13 +14,13 @@ import { MdDelete } from "react-icons/md";
 import { FaQuestion } from "react-icons/fa";
 
 const MemoryItemWrapper = styled.div`
-   display: block;
    position: relative;
-   overflow: hidden;
    margin: 15px 0;
+   width: fit-content;
 `;
 
 const MemoryImage = styled.img`
+   margin-bottom: 15px;
    max-width: 100%;
    border-radius: 16px;
 `;

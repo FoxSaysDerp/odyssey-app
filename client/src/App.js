@@ -1,9 +1,11 @@
+import "reset-css";
 import "./styles/app.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useState, useCallback } from "react";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import { AuthContext } from "./common/context/auth-context";
+import { ThemeContext } from "./common/context/theme-context";
 
 import { Main } from "./styles/Main";
 
@@ -31,6 +33,12 @@ const App = () => {
       setIsLoggedIn(false);
       setUserId(null);
    }, []);
+
+   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
+
+   const toggleMenuExpansion = useCallback(() => {
+      setIsMenuExpanded((prevState) => !prevState);
+   });
 
    let routes;
 
@@ -66,21 +74,28 @@ const App = () => {
             userId: userId,
          }}
       >
-         <BrowserRouter>
-            <Header />
-            <Main>{routes}</Main>
-            <ToastContainer
-               position="bottom-right"
-               autoClose={2000}
-               hideProgressBar={false}
-               newestOnTop={false}
-               closeOnClick
-               rtl={false}
-               pauseOnFocusLoss={false}
-               draggable={false}
-               pauseOnHover
-            />
-         </BrowserRouter>
+         <ThemeContext.Provider
+            value={{
+               isMenuExpanded: isMenuExpanded,
+               toggleMenuExpansion: toggleMenuExpansion,
+            }}
+         >
+            <BrowserRouter>
+               <Header />
+               <Main isMenuExpanded={isMenuExpanded}>{routes}</Main>
+               <ToastContainer
+                  position="bottom-right"
+                  autoClose={2000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover
+               />
+            </BrowserRouter>
+         </ThemeContext.Provider>
       </AuthContext.Provider>
    );
 };
