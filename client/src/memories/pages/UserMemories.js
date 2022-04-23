@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../../common/context/auth-context";
+import styled from "styled-components";
 import MemoryList from "../components/MemoryList";
 import { useParams } from "react-router-dom";
 import { useHttpClient } from "../../common/hooks/useHttpClient";
@@ -6,8 +8,18 @@ import Spinner from "../../common/components/Spinner";
 
 import { toast } from "react-toastify";
 
+const UserMemoriesHeader = styled.h2`
+   font-size: 1.75rem;
+   text-align: center;
+   > span {
+      font-weight: 700;
+   }
+`;
+
 const UserMemories = () => {
    const [memoriesByUserId, setMemoriesByUserId] = useState([]);
+
+   const auth = useContext(AuthContext);
 
    const { sendRequest, error, isLoading } = useHttpClient();
 
@@ -51,7 +63,16 @@ const UserMemories = () => {
       !isLoading &&
       memoriesByUserId && (
          <div>
-            <h2>{`${userId}'s memories`}</h2>
+            {userId !== auth.userId && (
+               <UserMemoriesHeader>
+                  <span>{`${userId}'s`}</span> memories
+               </UserMemoriesHeader>
+            )}
+            {userId === auth.userId && (
+               <UserMemoriesHeader>
+                  <span>Your</span> memories
+               </UserMemoriesHeader>
+            )}
             <MemoryList
                items={memoriesByUserId}
                onDeleteMemory={memoryDeletionHandler}

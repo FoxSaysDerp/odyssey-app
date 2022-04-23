@@ -84,9 +84,7 @@ const UserItem = ({ id, name, picture, memoriesCount }) => {
    return (
       <UserLink to={`${id}/memories`}>
          <UserItemLi>
-            <UserPictureWrapper
-               isCurrentUser={auth.userId ?? auth.userId === id}
-            >
+            <UserPictureWrapper isCurrentUser={auth.userId === id}>
                <UserPicture
                   src={picture}
                   alt={`${name}'s picture`}

@@ -16,6 +16,7 @@ const ImageUploadWrapper = styled.div`
 const ImageUploadPreview = styled.div`
    width: 100%;
    height: 100%;
+   max-width: 320px;
    display: flex;
    justify-content: center;
    align-items: center;
