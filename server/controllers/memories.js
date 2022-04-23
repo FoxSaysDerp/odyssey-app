@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const { validationResult } = require("express-validator");
 const moment = require("moment");
 const mongoose = require("mongoose");
@@ -182,6 +184,8 @@ const deleteMemory = async (req, res, next) => {
       return next(error);
    }
 
+   const imagePath = memory.image;
+
    try {
       const sess = await mongoose.startSession();
       sess.startTransaction();
@@ -202,6 +206,10 @@ const deleteMemory = async (req, res, next) => {
       );
       return next(error);
    }
+
+   fs.unlink(imagePath, (err) => {
+      console.log(err);
+   });
 
    res.status(200).json({ message: `Deleted Memory with id: ${memoryId}` });
 };
