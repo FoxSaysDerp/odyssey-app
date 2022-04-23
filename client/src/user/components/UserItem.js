@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import theme from "../../styles/theme";
+import { AuthContext } from "../../common/context/auth-context";
 
 const UserItemLi = styled.li`
    width: 100%;
@@ -18,12 +20,31 @@ const UserItemLi = styled.li`
    box-shadow: ${theme.shadow.normal};
 `;
 
-const UserPicture = styled.img`
+const UserPictureWrapper = styled.div`
    grid-area: 1 / 1/ 3 / 3;
    max-height: 70px;
    max-width: 70px;
+   aspect-ratio: 1;
+   border-radius: 50em;
+   background: ${({ isCurrentUser }) =>
+      isCurrentUser ? theme.gradient.main : "#fff"};
+   padding: 4px;
+   z-index: 1;
+   position: relative;
+`;
+
+const UserPicture = styled.img`
+   width: calc(100% - 9px);
+   height: calc(100% - 9px);
    object-fit: cover;
-   border-radius: 50%;
+   border-radius: 50em;
+   padding: 3px;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   z-index: 2;
+   background-color: #fff;
 `;
 
 const UserName = styled.div`
@@ -58,14 +79,20 @@ const UserLink = styled(Link)`
 `;
 
 const UserItem = ({ id, name, picture, memoriesCount }) => {
+   const auth = useContext(AuthContext);
+
    return (
       <UserLink to={`${id}/memories`}>
          <UserItemLi>
-            <UserPicture
-               src={picture}
-               alt={`${name}'s picture`}
-               className="user-item__picture"
-            />
+            <UserPictureWrapper
+               isCurrentUser={auth.userId ?? auth.userId === id}
+            >
+               <UserPicture
+                  src={picture}
+                  alt={`${name}'s picture`}
+                  className="user-item__picture"
+               />
+            </UserPictureWrapper>
             <UserName>{name}</UserName>
             <UserMemories>
                Memories: <span>{memoriesCount}</span>

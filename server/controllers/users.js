@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
+const pathToUnix = require("../util/path-to-unix");
 
 const getUsers = async (req, res, next) => {
    let users;
@@ -55,10 +56,14 @@ const createUser = async (req, res, next) => {
 
    const { name, email, password } = req.body;
 
+   const filePath = req.file.path;
+   const correctPath = pathToUnix(filePath);
+   console.log(correctPath);
+
    const createdUser = new User({
       name,
       email,
-      image: "https://solisradius.pl/wp-content/uploads/2021/04/person-icon.png",
+      image: "http://localhost:5000/" + correctPath,
       password,
       memories: [],
       createdOn: moment(),
