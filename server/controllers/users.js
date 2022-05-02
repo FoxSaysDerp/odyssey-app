@@ -128,7 +128,7 @@ const loginUser = async (req, res, next) => {
    }
 
    if (!existingUser) {
-      return next(new HttpError("Provided credentials are invalid."), 401);
+      return next(new HttpError("Provided credentials are invalid."), 403);
    }
 
    let isValidPassword = false;
@@ -145,7 +145,7 @@ const loginUser = async (req, res, next) => {
 
    if (!isValidPassword) {
       return next(
-         new HttpError("Invalid credentials, please insert correct ones.", 401)
+         new HttpError("Invalid credentials, please insert correct ones.", 403)
       );
    }
 

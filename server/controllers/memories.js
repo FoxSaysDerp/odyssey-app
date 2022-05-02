@@ -154,6 +154,14 @@ const updateMemory = async (req, res, next) => {
       return next(error);
    }
 
+   if (memory.creator.toString() !== req.userData.userId) {
+      const error = new HttpError(
+         "You have insufficient permissions to modify this memory.",
+         401
+      );
+      return next(error);
+   }
+
    memory.title = title;
    memory.description = description;
 
@@ -184,6 +192,14 @@ const deleteMemory = async (req, res, next) => {
       return next(error);
    }
 
+   if (memory.creator.id !== req.userData.userId) {
+      const error = new HttpError(
+         "You have insufficient permissions to delete this memory.",
+         401
+      );
+      return next(error);
+   }
+
    const imagePath = memory.image;
 
    try {
@@ -195,7 +211,7 @@ const deleteMemory = async (req, res, next) => {
       await sess.commitTransaction();
    } catch (err) {
       return next(
-         new HttpError("Somethign went wrong, could not delete a memory", 500)
+         new HttpError("Something went wrong, could not delete a memory", 500)
       );
    }
 
