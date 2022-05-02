@@ -95,12 +95,12 @@ const createMemory = async (req, res, next) => {
       description,
       image: "http://localhost:5000/" + pathToUnix(req.file.path),
       createdOn: moment(),
-      creator,
+      creator: req.userData.userId,
    });
 
    let user;
    try {
-      user = await User.findById(creator);
+      user = await User.findById(req.userData.userId);
    } catch (err) {
       return next(
          new HttpError("Creating a Memory has failed, please try again", 500)
