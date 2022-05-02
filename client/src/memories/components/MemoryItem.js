@@ -86,7 +86,8 @@ const MemoryItem = ({
       try {
          await sendRequest(
             `http://localhost:5000/api/memories/${id}`,
-            "DELETE"
+            "DELETE",
+            { Authorization: `Bearer ${auth.token}` }
          );
          toast.info("Successfully deleted a memory.", {
             position: "bottom-right",

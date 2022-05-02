@@ -72,7 +72,9 @@ const NewMemory = () => {
          await sendRequest(
             "http://localhost:5000/api/memories",
             "POST",
-            {},
+            {
+               Authorization: `Bearer ${auth.token}`,
+            },
             formData
          );
          toast.success("Successfully created a Memory!", {

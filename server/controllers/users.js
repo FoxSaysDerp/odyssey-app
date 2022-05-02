@@ -143,7 +143,7 @@ const loginUser = async (req, res, next) => {
       );
    }
 
-   if (isValidPassword) {
+   if (!isValidPassword) {
       return next(
          new HttpError("Invalid credentials, please insert correct ones.", 401)
       );

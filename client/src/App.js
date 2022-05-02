@@ -22,15 +22,15 @@ import UpdateMemory from "./memories/pages/UpdateMemory";
 import UserMemories from "./memories/pages/UserMemories";
 
 const App = () => {
-   const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [token, setToken] = useState(false);
    const [userId, setUserId] = useState(null);
 
-   const login = useCallback((uid) => {
-      setIsLoggedIn(true);
+   const login = useCallback((uid, token) => {
+      setToken(token);
       setUserId(uid);
    }, []);
    const logout = useCallback(() => {
-      setIsLoggedIn(false);
+      setToken(null);
       setUserId(null);
    }, []);
 
@@ -42,7 +42,7 @@ const App = () => {
 
    let routes;
 
-   if (isLoggedIn) {
+   if (token) {
       routes = (
          <Switch>
             <Route path="/" component={AllMemories} exact />
@@ -68,7 +68,8 @@ const App = () => {
    return (
       <AuthContext.Provider
          value={{
-            isLoggedIn: isLoggedIn,
+            isLoggedIn: !!token,
+            token: token,
             login: login,
             logout: logout,
             userId: userId,
