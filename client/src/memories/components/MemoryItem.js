@@ -13,20 +13,24 @@ import { HiPencilAlt } from "react-icons/hi";
 import { MdDelete } from "react-icons/md";
 import { FaQuestion } from "react-icons/fa";
 
-const MemoryItemWrapper = styled.div`
+const MemoryItemWrapper = styled.li`
    position: relative;
    margin: 15px 0;
-   width: fit-content;
+   width: 100%;
 `;
 
 const MemoryImage = styled.img`
-   margin-bottom: 15px;
-   max-width: 100%;
+   display: block;
+   margin: 0 auto 15px auto;
+   width: 100%;
+   object-fit: cover;
    border-radius: 16px;
+   max-height: 90vh;
 `;
 
 const MemoryInfo = styled.div`
    display: block;
+   line-height: 1.5;
 `;
 
 const MemoryCreator = styled.span`
@@ -86,7 +90,8 @@ const MemoryItem = ({
       try {
          await sendRequest(
             `http://localhost:5000/api/memories/${id}`,
-            "DELETE"
+            "DELETE",
+            { Authorization: `Bearer ${auth.token}` }
          );
          toast.info("Successfully deleted a memory.", {
             position: "bottom-right",

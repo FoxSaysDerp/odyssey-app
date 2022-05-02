@@ -7,8 +7,9 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import { AuthContext } from "./common/context/auth-context";
 import { ThemeContext } from "./common/context/theme-context";
 
-import { Main } from "./styles/Main";
+import { useAuth } from "./common/hooks/useAuth";
 
+import { Main } from "./styles/Main";
 import Header from "./common/components/Layout/Header";
 import { ToastContainer } from "react-toastify";
 
@@ -22,17 +23,7 @@ import UpdateMemory from "./memories/pages/UpdateMemory";
 import UserMemories from "./memories/pages/UserMemories";
 
 const App = () => {
-   const [isLoggedIn, setIsLoggedIn] = useState(false);
-   const [userId, setUserId] = useState(null);
-
-   const login = useCallback((uid) => {
-      setIsLoggedIn(true);
-      setUserId(uid);
-   }, []);
-   const logout = useCallback(() => {
-      setIsLoggedIn(false);
-      setUserId(null);
-   }, []);
+   const { token, login, logout, userId } = useAuth();
 
    const [isMenuExpanded, setIsMenuExpanded] = useState(true);
 
@@ -42,7 +33,7 @@ const App = () => {
 
    let routes;
 
-   if (isLoggedIn) {
+   if (token) {
       routes = (
          <Switch>
             <Route path="/" component={AllMemories} exact />
@@ -65,10 +56,12 @@ const App = () => {
          </Switch>
       );
    }
+
    return (
       <AuthContext.Provider
          value={{
-            isLoggedIn: isLoggedIn,
+            isLoggedIn: !!token,
+            token: token,
             login: login,
             logout: logout,
             userId: userId,

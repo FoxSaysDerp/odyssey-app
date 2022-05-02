@@ -3,6 +3,7 @@ const { check } = require("express-validator");
 
 const memoriesControllers = require("../controllers/memories");
 const fileUpload = require("../middleware/file-upload");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
@@ -11,6 +12,8 @@ router.get("/all", memoriesControllers.getAllMemories);
 router.get("/:mid", memoriesControllers.getMemoryById);
 
 router.get("/user/:uid", memoriesControllers.getMemoriesByUserId);
+
+router.use(checkAuth);
 
 router.post(
    "/",
