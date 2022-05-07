@@ -133,7 +133,7 @@ const MemoryItem = ({
          <MemoryInfo>
             <MemoryCreator>{creatorId}</MemoryCreator>
             <MemoryDescription>{description}</MemoryDescription>
-            <MemoryDate>{moment(createdOn).format("LLL")}</MemoryDate>
+            <MemoryDate>{moment(createdOn).from(moment())}</MemoryDate>
          </MemoryInfo>
          {auth.userId === creatorId && (
             <ButtonContainer>
